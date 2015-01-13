@@ -1,0 +1,11 @@
+<? $paging = $this->params["paging"]; ?>
+<? $pagingUrl = $this->params["pagingUrl"]; ?>
+<ul class="pagination catalogue-pagination">
+    <li class="<?=$paging->isFirst()?'disabled':'';?>"><a href="<?=!$paging->isFirst()?($pagingUrl.'?page=1'):'#';?>"><?=Language::getPagingLabel('first');?></a></li>
+    <li class="<?=$paging->canPrev()?'':'disabled';?>"><a href="<?=$paging->canPrev()? ($pagingUrl.'?page='.($paging->getActive() -1)) : '#';?>"><?=Language::getPagingLabel('prev');?></a></li>
+    <? foreach($paging as $page) { ?>
+    <li class="<?=$paging->isActive()?'active':'';?>"><a href="<?=$pagingUrl.'?page='.$page;?>"><?=$page;?></a></li>
+    <? } ?>
+    <li class="<?=$paging->canNext()?'':'disabled';?>"><a href="<?=$paging->canNext()? ($pagingUrl.'?page='.($paging->getActive() +1)):'#';?>"><?=Language::getPagingLabel('next');?></a></li>
+    <li class="<?=$paging->isLast()?'disabled':'';?>"><a href="<?=!$paging->isLast()? ($pagingUrl.'?page='.$paging->getPageCount()): '#';?>"><?=Language::getPagingLabel('last');?></a></li>
+</ul>

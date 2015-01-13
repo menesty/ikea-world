@@ -1,0 +1,156 @@
+<? $contextUrl = $this->params["contextUrl"]; ?>
+<div class="col-lg-3 col-md-3 col-sm-12">
+
+    <!-- RECENT PRODUCT -->
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="no-padding">
+            <span class="title">RECENT PRODUCT</span>
+        </div>
+        <div class="thumbnail col-lg-12 col-md-12 col-sm-6 text-center">
+            <a href="detail.html" class="link-p">
+                <img src="images/product-5.jpg" alt="">
+            </a>
+            <div class="caption prod-caption">
+                <h4><a href="detail.html">Live Nation 3 Days of Peace and Music Carbon</a></h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, minima!</p>
+                <p>
+                <div class="btn-group">
+                    <a href="#" class="btn btn-default">$ 428.96</a>
+                    <a href="#" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Buy</a>
+                </div>
+                </p>
+            </div>
+        </div>
+        <div class="thumbnail col-lg-12 col-md-12 col-sm-6 visible-sm text-center">
+            <a href="detail.html" class="link-p">
+                <img src="images/product-6.jpg" alt="">
+            </a>
+            <div class="caption prod-caption">
+                <h4><a href="detail.html">Live Nation ACDC Gray T-Shirt</a></h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, minima!</p>
+                <p>
+                <div class="btn-group">
+                    <a href="#" class="btn btn-default">$ 428.96</a>
+                    <a href="#" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Buy</a>
+                </div>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- End RECENT PRODUCT -->
+
+</div>
+
+<div class="clearfix visible-sm"></div>
+
+<!-- Cart -->
+<div class="col-lg-9 col-md-9 col-sm-12">
+    <div class="col-lg-12 col-sm-12">
+        <span class="title uppercase"><?=Language::getMenuLabel('checkout');?></span>
+    </div>
+    <div class="col-lg-12 col-sm-12 hero-feature">
+        <form method="post" action="<?=$contextUrl;?>checkout/next">
+        <table class="table table-bordered tbl-checkout">
+            <tbody>
+            <tr>
+                <td><?=Language::getCheckoutLabel('first_name');?></td>
+                <td>
+                    <input type="text" name="firstName" class="form-control" required="true" minlength="1" maxlength="100"
+                           data-validation-required-message="You must agree to the terms and conditions"/>
+                </td>
+                <td><?=Language::getCheckoutLabel('last_name');?></td>
+                <td>
+                    <input type="text" name="lastName" class="form-control" required="true" minlength="1" maxlength="100"
+                           data-validation-required-message="You must agree to the terms and conditions"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>
+                    <div class="control-group">
+                    <input type="text" name="email" class="form-control" data-validation-matches-match="email" required
+                           data-validation-required-message="You must agree to the terms and conditions"/>
+                    </div>
+                </td>
+                <td><?=Language::getCheckoutLabel('telephone');?></td>
+                <td>
+                    <input type="text" name="telephone" class="form-control" required="true" minlength="4" maxlength="20"
+                           data-validation-required-message="You must agree to the terms and conditions"/>
+                </td>
+            </tr>
+            <tr>
+                <td><?=Language::getCheckoutLabel('address');?></td>
+                <td colspan="3">
+                    <textarea name="address" class="form-control" required="true" minlength="4" maxlength="100"
+                              data-validation-required-message="You must agree to the terms and conditions"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td><?=Language::getCheckoutLabel('city');?></td>
+                <td>
+                    <input type="text" name="city" class="form-control" required="true" minlength="2" maxlength="30"
+                           data-validation-required-message="You must agree to the terms and conditions"/>
+                </td>
+                <td><?=Language::getCheckoutLabel('post_code');?></td>
+                <td>
+                    <input type="text" name="post_code" class="form-control" required="true" minlength="2" maxlength="8"
+                           data-validation-required-message="You must agree to the terms and conditions"/>
+                </td>
+            </tr>
+            <tr>
+                <td><?=Language::getCheckoutLabel('country');?></td>
+                <td>
+                    <select class="form-control" name="country" required="true"
+                            data-validation-required-message="You must agree to the terms and conditions">
+                        <option value=""><?=Language::getMainLabel('please_select_label');?></option>
+                        <? foreach(Language::getCheckoutLabel('countries') as $country) { ?>
+                        <option value="<?=$country;?>"><?=$country;?></option>
+                        <?};?>
+                    </select>
+                </td>
+                <td class="tujuan"><?=Language::getCheckoutLabel('region_state');?></td>
+                <td class="jne">
+                    <input type="text" name="region_state" class="form-control" required="true" minlength="2" maxlength="30"
+                           data-validation-required-message="You must agree to the terms and conditions"/>
+                </td>
+            </tr>
+            <tr>
+                <td><?=Language::getCheckoutLabel('comment');?></td>
+                <td colspan="3">
+                    <textarea name="comment" class="form-control"></textarea>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="table table-bordered tbl-cart">
+            <thead>
+            <tr>
+                <td><?=Language::getCartLabel("product_name");?></td>
+                <td><?=Language::getCartLabel("quantity");?></td>
+                <td><?=Language::getCartLabel("unit_price");?></td>
+                <td><?=Language::getCartLabel("sub_total");?></td>
+            </tr>
+            </thead>
+            <tbody>
+            <? foreach(ShoppingCart::get()->getItems() as $cartItem) { ?>
+            <tr>
+                <td><?=$cartItem->getProduct()->getTitle();?></td>
+                <td class="text-center"><?=$cartItem->getCount();?></td>
+                <td class="price">$ <?=$cartItem->getProduct()->getPrice();?></td>
+                <td>$ <?=$cartItem->getTotalPrice();?></td>
+            </tr>
+            <?};?>
+            <tr>
+                <td colspan="3" align="right"><?=Language::getCartLabel("total");?></td>
+                <td class="total" colspan="2"><b>$ <?=ShoppingCart::get()->getTotalPrice();?></b></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="btn-group btns-cart">
+            <input type="submit" class="btn btn-primary" value="<?=Language::getCheckoutLabel('next');?>" />
+        </div>
+        </form>
+
+    </div>
+</div>
+<!-- End Cart -->

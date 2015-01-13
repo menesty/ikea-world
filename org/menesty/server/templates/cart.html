@@ -1,0 +1,75 @@
+<? $contextUrl = $this->params["contextUrl"]; ?>
+
+<div class="col-lg-3 col-md-3 col-sm-12">
+    <?=$this->getParam("bestSeller_content");?>
+</div>
+
+<div class="clearfix visible-sm"></div>
+
+<!-- Cart -->
+<div class="col-lg-9 col-md-9 col-sm-12">
+    <div class="col-lg-12 col-sm-12">
+        <span class="title uppercase"><?=Language::getMenuLabel("shoping_cart");?></span>
+    </div>
+    <div class="col-lg-12 col-sm-12 hero-feature">
+        <form action="<?=$contextUrl;?>cart/update" method="post">
+            <table class="table table-bordered tbl-cart">
+                <thead>
+                <tr>
+                    <td class="hidden-xs" style="width: 100px;"><?=Language::getCartLabel("image");?></td>
+                    <td><?=Language::getCartLabel("product_name");?></td>
+                    <td class="td-qty"><?=Language::getCartLabel("quantity");?></td>
+                    <td style="width: 120px;"><?=Language::getCartLabel("unit_price");?></td>
+                    <td><?=Language::getCartLabel("sub_total");?></td>
+                    <td style="width: 50px;"><?=Language::getCartLabel("remove");?></td>
+                </tr>
+                </thead>
+                <tbody>
+                <? foreach(ShoppingCart::get()->getItems() as $cartItem) { ?>
+                <tr>
+                    <td class="hidden-xs" align="center">
+                        <a href="<?=$contextUrl;?>catalog/detail/<?=$cartItem->getProduct()->getArtNumber();?>">
+                            <img src="/image/thumb/<?=$cartItem->getProduct()->getArtNumber();?>"
+                                 alt="<?=$cartItem->getProduct()->getTitle();?>" title="" width="47" height="47"/>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="<?=$contextUrl;?>catalog/detail/<?=$cartItem->getProduct()->getArtNumber();?>"><?=$cartItem->
+                            getProduct()->getTitle();?></a>
+                    </td>
+
+                    <td>
+                        <input type="hidden" name="productId[]" value="<?=$cartItem->getProduct()->getId();?>"/>
+                        <input type="text" name="<?=$cartItem->getProduct()->getId();?>_count"
+                               value="<?=$cartItem->getCount();?>" class="input-qty form-control text-center"/>
+                    </td>
+                    <td class="price">$ <?=$cartItem->getProduct()->getPrice();?></td>
+                    <td>$ <?=$cartItem->getTotalPrice();?></td>
+                    <td class="text-center">
+                        <a href="#" class="remove_cart" rel="2">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </td>
+                </tr>
+                <?};?>
+
+                <tr>
+                    <td colspan="4" align="right"><?=Language::getCartLabel("total");?></td>
+                    <td class="total" colspan="2"><b>$<?=ShoppingCart::get()->getTotalPrice();?></b>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="btn-group btns-cart">
+                <button type="button" class="btn btn-primary" onclick="window.location='<?=$contextUrl;?>catalog/'"><i
+                        class="fa fa-arrow-circle-left"></i> <?=Language::getCartLabel("continue_shopping");?>
+                </button>
+                <input  type="submit" class="btn btn-primary" value="<?=Language::getCartLabel('update_cart');?>" />
+                <button type="button" class="btn btn-primary" onclick="window.location='<?=$contextUrl;?>checkout/'"><?=Language::getCartLabel('checkout');?> <i
+                        class="fa fa-arrow-circle-right"></i></button>
+            </div>
+        </form>
+
+    </div>
+</div>
+<!-- End Cart -->

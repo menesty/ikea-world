@@ -1,0 +1,70 @@
+<? $product = $this->params["product"]; ?>
+<div class="col-lg-3 col-md-3 col-sm-12">
+    <?=$this->getParam("bestSeller_content");?>
+</div>
+
+<div class="clearfix visible-sm"></div>
+
+<!-- Product Detail -->
+<div class="col-lg-9 col-md-9 col-sm-12">
+    <div class="col-lg-12 col-sm-12">
+        <span class="title"><?=$product->getTitle();?>,&nbsp;<?=$product->getPreparedArtNumber();?></span>
+    </div>
+    <div class="col-lg-12 col-sm-12 hero-feature">
+        <div class="sp-wrap">
+            <? foreach($product->getImages() as $image) { ?>
+            <a href="<?=$image->getZoom();?>"><img src="<?=$image->getNormal();?>" alt=""></a>
+            <? }; ?>
+        </div>
+
+        <?=$product->getDescription();?>
+        <hr/>
+        <h3>$428.96</h3>
+
+        <div class="row input-qty-detail">
+            <input type="text" class="form-control input-qty text-center" value="1">
+            <button class="btn btn-primary pull-left">add to cart</button>
+        </div>
+
+        <div class="row product-details">
+            <hr/>
+            <div class="col-lg-6 col-sm-6">
+                <h4>Дизайнер:</h4>
+                <?=nl2br($product->getDesigner());?>
+
+                <h4>Размеры товара:</h4>
+                <?=nl2br($product->getPacking());?>
+
+                <h4>Инструкция по уходу:</h4>
+                <?=nl2br($product->getInstruction());?>
+            </div>
+
+
+            <div class="col-lg-6 col-sm-6">
+                <h4>Описание и размеры товара:</h4>
+                <?=nl2br($product->getSize());?>
+            </div>
+        </div>
+
+        <style>
+            .row.product-details h4 {
+                font-weight: bold;
+                margin-bottom: 5px;
+                font-size: 16px;
+            }
+        </style>
+        <br/>
+        <hr/>
+        <div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+            <a class="addthis_button_preferred_1"></a>
+            <a class="addthis_button_preferred_2"></a>
+            <a class="addthis_button_preferred_3"></a>
+            <a class="addthis_button_preferred_4"></a>
+            <a class="addthis_button_compact"></a>
+        </div>
+        <script type="text/javascript"
+                src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=xa-4f0c254f1302adf8"></script>
+    </div>
+    <div class="clearfix"></div>
+
+</div>

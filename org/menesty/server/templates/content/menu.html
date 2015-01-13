@@ -1,0 +1,25 @@
+<? $contextUrl = $this->params["contextUrl"]; ?>
+
+<nav class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <!-- text logo on mobile view -->
+            <a class="navbar-brand visible-xs" href="index.html">Ikea-World Online Shop</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="<?=$contextUrl;?>" class="<?=Menu::activeMenuStyle('index');?>"><?=Language::getMenuLabel('home');?></a></li>
+                <li><a href="<?=$contextUrl;?>catalog/" class="<?=Menu::activeMenuStyle('catalog');?>"><?=Language::getMenuLabel('catalogue');?></a></li>
+                <li><a href="<?=$contextUrl;?>cart/" class="<?=Menu::activeMenuStyle('cart');?>"><?=Language::getMenuLabel('shoping_cart');?></a></li>
+                <li><a href="<?=$contextUrl;?>checkout/" class="<?=Menu::activeMenuStyle('checkout');?>"><?=Language::getMenuLabel('checkout');?></a></li>
+                <li><a href="<?=$contextUrl;?>contact/" class="<?=Menu::activeMenuStyle('contact');?>"><?=Language::getMenuLabel('contact_us');?></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

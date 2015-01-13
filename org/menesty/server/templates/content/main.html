@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Ikea-World</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300italic,700&subset=latin,cyrillic-ext,cyrillic'
+          rel='stylesheet' type='text/css'>
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
+    <? foreach($this->getParam('custom_css') as $css) { ?>
+    <link href="/css/<?=$css;?>.css" rel="stylesheet">
+    <?};?>
+
+    <link href="/css/style.css" rel="stylesheet">
+    <script>
+        var contextUrl = '<?=$this->getParam("contextUrl");?>';
+    </script>
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="row">
+
+            <!-- Logo -->
+            <div class="col-lg-4 col-md-3 hidden-sm hidden-xs">
+                <div class="well logo">
+                    <a href="index.html">
+                        Ikea-World <span>Online Shop</span>
+                    </a>
+
+                    <div><?=Language::getMainLabel('site_slogan');?></div>
+                </div>
+            </div>
+            <!-- End Logo -->
+
+            <!-- Search Form -->
+            <div class="col-lg-5 col-md-5 col-sm-7 col-xs-12">
+                <div class="well">
+                    <form action="">
+                        <div class="input-group">
+                            <input type="text" class="form-control input-search"
+                                   placeholder="<?=Language::getMainLabel('search_message');?>"/>
+	                            <span class="input-group-btn">
+	                                <button class="btn btn-default no-border-left" type="submit"><i
+                                            class="fa fa-search"></i></button>
+	                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- End Search Form -->
+
+            <!-- Shopping Cart List -->
+            <?=$this->getParam("menu_shopping_cart_content");?>
+            <!-- End Shopping Cart List -->
+        </div>
+    </div>
+</header>
+
+<!-- Navigation -->
+<?=$this->getParam("navigation_content");?>
+<!-- End Navigation -->
+
+<div class="container main-container">
+    <div class="row">
+        <?=$this->getParam("main_content");?>
+
+    </div>
+</div>
+<!-- Footer -->
+<?=$this->getParam("footer_content");?>
+<!-- End Footer -->
+
+
+<a href="#top" class="back-top text-center" onclick="$('body,html').animate({scrollTop:0},500); return false">
+    <i class="fa fa-angle-double-up"></i>
+</a>
+
+<script src="/js/jquery-1.11.2.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<? foreach($this->getParam('custom_js') as $js) { ?>
+<script src="/js/<?=$js;?>.js"></script>
+<?};?>
+<script src="/js/ikea_world.js"></script>
+</body>
+</html>

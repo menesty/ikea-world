@@ -1,0 +1,48 @@
+<? $contextUrl = $this->params["contextUrl"]; ?>
+
+<div class="col-lg-3 col-md-3 col-sm-12">
+
+    <!-- Categories -->
+    <?=$this->getParam("category_content");?>
+    <!-- End Categories -->
+
+    <!-- Best Seller -->
+    <?=$this->getParam("bestSeller_content");?>
+    <!-- End Best Seller -->
+
+</div>
+
+<div class="clearfix visible-sm"></div>
+
+<!-- Catalogue -->
+<div class="col-lg-9 col-md-9 col-sm-12">
+    <div class="col-lg-12 col-sm-12">
+        <span class="title uppercase"><?=Language::getMainLabel('products_catalogue');?></span>
+    </div>
+
+    <? foreach($this->params["products"] as $product) { ?>
+    <div class="col-lg-3 col-sm-3 hero-feature text-center">
+        <div class="thumbnail">
+            <a href="<?=$contextUrl;?>catalog/detail/<?=$product->getArtNumber();?>" class="link-p">
+                <img src="/image/thumb/<?=$product->getArtNumber();?>" alt="">
+            </a>
+
+            <div class="caption prod-caption">
+                <h4><a href="<?=$contextUrl;?>catalog/detail/<?=$product->getArtNumber();?>"><?=$product->getTitle();?></a></h4>
+
+                <p style="height: 55px; overflow: hidden;"><?=$product->getShortDescription();?></p>
+
+                <div class="btn-group">
+                    <a href="#" class="btn btn-default add-to-cart" data-id="<?=$product->getId();?>">$ <?=$product->getSellPrice();?></a>
+                    <a href="#" class="btn btn-primary add-to-cart" data-id="<?=$product->getId();?>"><i class="fa fa-shopping-cart"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <? }; ?>
+
+    <div class="text-center" style="clear: left;">
+        <?=$this->getParam("paging_content");?>
+    </div>
+</div>
+<!-- End Catalogue -->

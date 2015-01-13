@@ -1,0 +1,28 @@
+<? $contextUrl = $this->params["pageContextUrl"]; ?>
+<!-- Categories -->
+<div class="col-lg-12 col-md-12 col-sm-6">
+    <div class="no-padding">
+        <span class="title">Категории</span>
+    </div>
+    <div class="list-group list-categ">
+        <? foreach($this->params["categories"] as $category) { ?>
+        <a href="<?=$contextUrl.$category->getName();?>" class="list-group-item"><?=$category->getName();?></a>
+
+            <? if(!is_null($category->getSubCategories())) { ?>
+            <div class="level_2">
+                <? foreach($category->getSubCategories() as $subCategory) {?>
+                <a href="/<?=$contextUrl.$subCategory->getName();?>" class="list-group-item"><?=$subCategory->getName();?></a>
+
+                <? if(!is_null($subCategory->getSubCategories())) { ?>
+                <div class="level_3">
+                    <? foreach($subCategory->getSubCategories() as $subSubCategory) {?>
+                    <a href="<?=$contextUrl.$subSubCategory->getName();?>" class="list-group-item"><?=$subSubCategory->getName();?></a>
+                    <?};?>
+                </div>
+                <?};};?>
+            </div>
+            <?};
+            };?>
+    </div>
+</div>
+<!-- End Categories -->
