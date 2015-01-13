@@ -8,10 +8,10 @@
     <title>Ikea-World</title>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300italic,700&subset=latin,cyrillic-ext,cyrillic'
           rel='stylesheet' type='text/css'>
-    <link href="/www/css/bootstrap.css" rel="stylesheet">
-    <link href="/www/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
     <? foreach($this->getParam('custom_css') as $css) { ?>
-    <link href="/www/css/<?=$css;?>.css" rel="stylesheet">
+    <link href="/css/<?=$css;?>.css" rel="stylesheet">
     <?};?>
 
     <link href="/www/css/style.css" rel="stylesheet">
@@ -79,11 +79,11 @@
     <i class="fa fa-angle-double-up"></i>
 </a>
 
-<script src="/www/js/jquery-1.11.2.min.js"></script>
-<script src="/www/js/bootstrap.min.js"></script>
+<script src="/js/jquery-1.11.2.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 <? foreach($this->getParam('custom_js') as $js) { ?>
-<script src="/www/js/<?=$js;?>.js"></script>
+<script src="/js/<?=$js;?>.js"></script>
 <?};?>
-<script src="/www/js/ikea_world.js"></script>
+<script src="/js/ikea_world.js"></script>
 </body>
 </html>
