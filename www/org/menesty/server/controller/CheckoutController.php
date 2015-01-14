@@ -12,7 +12,7 @@ class CheckoutController extends AbstractController
      */
     public function defaultAction()
     {
-        $mainTemplate = $this->getBaseTemplate(array('jqBootstrapValidation','jquery.blImageCenter'));
+        $mainTemplate = $this->getBaseTemplate(array('jquery.validate','jquery.blImageCenter'));
 
         $mainTemplate->setParam("main_content", new Template("checkout.html"));
         $mainTemplate->setParam("clientInfo", ShoppingCart::getClientInfo());

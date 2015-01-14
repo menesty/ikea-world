@@ -183,11 +183,11 @@ class ClientOrderInfo
     {
         $error = array();
 
-        if (strlen($this->firstName) < 2 || strlen($this->firstName) > 100) {
+        if (strlen($this->firstName) < 3 || strlen($this->firstName) > 20) {
             $error["firstName"] = Language::getCheckoutErrorLabel("firstName");
         }
 
-        if (strlen($this->lastName) < 2 || strlen($this->lastName) > 100) {
+        if (strlen($this->lastName) < 3 || strlen($this->lastName) > 20) {
             $error["lastName"] = Language::getCheckoutErrorLabel("lastName");
         }
 

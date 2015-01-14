@@ -40,17 +40,36 @@ $(function () {
         return false;
     });
 
-    if($('form').exist()){
-        alert("ok");
-        $("input,select,textarea").not("[type=submit]").jqBootstrapValidation( {
-            preventSubmit: true,
-            submitError: function($form, event, errors) {
+    if($('#checkout-form').exist()){
+
+        var validator = $("#checkout-form").validate({
+            rules: {
+                firstName: {
+                    minlength: 3,
+                    maxlength: 15,
+                    required: true
+                },
+                lastName: {
+                    minlength: 3,
+                    maxlength: 15,
+                    required: true
+                }
             },
-            submitSuccess: function($form, event) {
-                event.preventDefault();
+
+            highlight: function(element) {
+                $(element).closest('.control-group').addClass('has-error');
             },
-            filter: function() {
-                return $(this).is(":visible");
+            unhighlight: function(element) {
+                $(element).closest('.control-group').removeClass('has-error');
+            },
+            errorElement: 'span',
+            errorClass: 'help-block',
+            errorPlacement: function(error, element) {
+                if(element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
             }
         });
     }

@@ -57,8 +57,7 @@ class Language
 
     public static function getCheckoutErrorLabel($key)
     {
-        $errors = self::getCheckoutLabel("error");
-        return $errors[$key];
+        return self::getMessage("checkout-error", $key);
     }
 
     public static function getPagingLabel($key)
