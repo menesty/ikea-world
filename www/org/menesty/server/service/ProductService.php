@@ -24,7 +24,7 @@ class ProductService extends AbstractService
         VALUES (:art_number, :title, :short_description, :designer, :size, :packing, :description, :instruction
         , :price)");
         } else {
-            $st = $connection->prepare("UPDATE `products` set `title` = :title, `short_description_$lang` = :short_description,
+            $st = $connection->prepare("UPDATE `products` set `title_$lang` = :title, `short_description_$lang` = :short_description,
         `designer` = :designer, `size_$lang` = :size, `packing_$lang` = :packing, `description_$lang` = :description,
         `instruction_$lang` = :instruction, `price` = :price where art_number = :art_number");
         }
