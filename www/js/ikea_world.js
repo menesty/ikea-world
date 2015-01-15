@@ -44,16 +44,15 @@ $(function () {
 
         var validator = $("#checkout-form").validate({
             rules: {
-                firstName: {
-                    minlength: 3,
-                    maxlength: 15,
-                    required: true
+                email: {
+                    required: true,
+                    email: true
                 },
-                lastName: {
-                    minlength: 3,
-                    maxlength: 15,
-                    required: true
+                telephone: {
+                    required: true,
+                    digits: true
                 }
+
             },
 
             highlight: function(element) {

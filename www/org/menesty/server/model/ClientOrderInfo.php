@@ -203,7 +203,7 @@ class ClientOrderInfo
             $error["post_code"] = Language::getCheckoutErrorLabel("post_code");
         }
 
-        if (strlen($this->city) < 2 || strlen($this->city) > 30) {
+        if (strlen($this->city) < 3 || strlen($this->city) > 30) {
             $error["city"] = Language::getCheckoutErrorLabel("city");
         }
 
@@ -213,7 +213,7 @@ class ClientOrderInfo
             $error["country"] = Language::getCheckoutErrorLabel("country");
         }
 
-        if (strlen($this->region_state) < 2 || strlen($this->region_state) > 30) {
+        if (strlen($this->region_state) < 3 || strlen($this->region_state) > 30) {
             $error["region_state"] = Language::getCheckoutErrorLabel("region_state");
         }
 

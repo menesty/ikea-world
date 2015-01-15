@@ -326,3 +326,21 @@ footer .copyright{
 .prod-caption h4 {
     margin-bottom: 5px;
 }
+
+.form-group {
+    border-top: 1px solid #FFF;
+    border-bottom: 1px solid #EEE;
+}
+
+.form-horizontal .form-group {
+    margin: 0px;
+    padding: 10px 0px;
+}
+
+.widget-box {
+    background: none repeat scroll 0px 0px #FAFAFA;
+    border: 1px solid #CDCDCD;
+    clear: both;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}

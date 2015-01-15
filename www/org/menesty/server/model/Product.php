@@ -221,13 +221,14 @@ class Product
 
             $path = Utils::getProductImagePath($this->artNumber) . "normal" . DIRECTORY_SEPARATOR;
 
-
             $index = 0;
-            foreach (new DirectoryIterator($path) as $fileInfo) {
-                if ($fileInfo->isDot()) continue;
+            if (file_exists($path)) {
+                foreach (new DirectoryIterator($path) as $fileInfo) {
+                    if ($fileInfo->isDot()) continue;
 
-                $this->images[] = new ProductImage($this->artNumber, $index);
-                $index++;
+                    $this->images[] = new ProductImage($this->artNumber, $index);
+                    $index++;
+                }
             }
         }
 

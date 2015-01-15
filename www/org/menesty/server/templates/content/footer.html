@@ -4,23 +4,23 @@
     <div class="container">
         <div class="col-lg-3 col-md-3 col-sm-6">
             <div class="column">
-                <h4>Information</h4>
+                <h4><?=Language::getFooterLabel("information");?></h4>
                 <ul>
-                    <li><a href="<?=$contextUrl;?>information">About Us</a></li>
-                    <li><a href="<?=$contextUrl;?>information/policy">Policy Privacy</a></li>
-                    <li><a href="<?=$contextUrl;?>information/conditions">Terms and Conditions</a></li>
-                    <li><a href="<?=$contextUrl;?>information/shipping">Shipping Methods</a></li>
+                    <li><a href="<?=$contextUrl;?>information"><?=Language::getFooterLabel("about_us");?></a></li>
+                    <li><a href="<?=$contextUrl;?>information/policy"><?=Language::getFooterLabel("policy_privacy");?></a></li>
+                    <li><a href="<?=$contextUrl;?>information/conditions"><?=Language::getFooterLabel("terms_conditions");?></a></li>
+                    <li><a href="<?=$contextUrl;?>information/shipping"><?=Language::getFooterLabel("shipping_methods");?></a></li>
                 </ul>
             </div>
         </div>
 
         <div class="col-lg-3 col-md-3 col-sm-6">
             <div class="column">
-                <h4>Customer Service</h4>
+                <h4><?=Language::getFooterLabel("customer_service");?></h4>
                 <ul>
-                    <li><a href="<?=$contextUrl;?>contact">Contact Us</a></li>
+                    <li><a href="<?=$contextUrl;?>contact"><?=Language::getFooterLabel("customer_service");?></a></li>
                     <li><a href="<?=$contextUrl;?>contact">Skype: ikea-world</a></li>
-                    <li><a href="<?=$contextUrl;?>contact">Telp: 087825376xxx</a></li>
+                    <li><a href="<?=$contextUrl;?>contact"><?=Language::getFooterLabel("tel");?>: xxxxxxxxxxxx</a></li>
                     <li><a href="<?=$contextUrl;?>contact">Email: info@ikea-world.com</a></li>
                 </ul>
             </div>

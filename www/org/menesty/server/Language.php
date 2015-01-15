@@ -55,9 +55,15 @@ class Language
         return self::getMessage("checkout", $key);
     }
 
-    public static function getCheckoutErrorLabel($key)
+    public static function getCheckoutErrorLabel($key, $fieldKey = "", $params = array())
     {
-        return self::getMessage("checkout-error", $key);
+        $error = self::getMessage("checkout-error", $key);
+
+        if ($fieldKey != "") {
+            array_unshift($params, self::getCheckoutLabel($fieldKey));
+        }
+
+        return vsprintf($error, $params);
     }
 
     public static function getPagingLabel($key)
@@ -73,5 +79,10 @@ class Language
     public static function getCartLabel($key)
     {
         return self::getMessage("cart", $key);
+    }
+
+    public static function getFooterLabel($key)
+    {
+        return self::getMessage("footer", $key);
     }
 }

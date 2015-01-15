@@ -57,102 +57,135 @@
         <span class="title uppercase"><?=Language::getMenuLabel('checkout');?></span>
     </div>
     <div class="col-lg-12 col-sm-12 hero-feature">
-        <form method="post" action="<?=$contextUrl;?>checkout/next" id="checkout-form">
-            <table class="table table-bordered tbl-checkout">
-                <tbody>
-                <tr>
-                    <td><?=Language::getCheckoutLabel('first_name');?></td>
-                    <td>
-                        <div class="control-group">
-                            <input type="text" name="firstName" class="form-control" required="true" minlength="3"
-                                   maxlength="20"
-                                   data-msg="You must agree to the terms and conditions"/>
-                        </div>
-                    </td>
-                    <td><?=Language::getCheckoutLabel('last_name');?></td>
-                    <td>
-                        <div class="control-group">
-                            <input type="text" name="lastName" class="form-control" required="true" minlength="1"
-                                   maxlength="100"
-                                   data-msg="You must agree to the terms and conditions"/>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Email</td>
-                    <td>
-                        <div class="control-group">
-                            <input type="text" name="email" class="form-control" data-validation-matches-match="email"
-                                   required
-                                   data-msg="You must agree to the terms and conditions"/>
-                        </div>
-                    </td>
-                    <td><?=Language::getCheckoutLabel('telephone');?></td>
-                    <td>
-                        <div class="control-group">
-                            <input type="text" name="telephone" class="form-control" required="true" minlength="4"
-                                   maxlength="20"
-                                   data-msg="You must agree to the terms and conditions"/>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><?=Language::getCheckoutLabel('address');?></td>
-                    <td colspan="3">
-                        <div class="control-group">
-                            <textarea name="address" class="form-control" required="true" minlength="4" maxlength="100"
-                                      data-msg="You must agree to the terms and conditions"></textarea>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><?=Language::getCheckoutLabel('city');?></td>
-                    <td>
-                        <div class="control-group">
-                            <input type="text" name="city" class="form-control" required="true" minlength="2"
-                                   maxlength="30"
-                                   data-msg="You must agree to the terms and conditions"/>
-                        </div>
-                    </td>
-                    <td><?=Language::getCheckoutLabel('post_code');?></td>
-                    <td>
-                        <div class="control-group">
-                            <input type="text" name="post_code" class="form-control" required="true" minlength="2"
-                                   maxlength="8"
-                                   data-msg="You must agree to the terms and conditions"/>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><?=Language::getCheckoutLabel('country');?></td>
-                    <td>
-                        <div class="control-group">
-                            <select class="form-control" name="country" required="true"
-                                    data-validation-required-message="You must agree to the terms and conditions">
-                                <option value=""><?=Language::getMainLabel('please_select_label');?></option>
-                                <? foreach(Language::getCheckoutLabel('countries') as $country) { ?>
-                                <option value="<?=$country;?>"><?=$country;?></option>
-                                <?};?>
-                            </select>
-                        </div>
-                    </td>
-                    <td class="tujuan"><?=Language::getCheckoutLabel('region_state');?></td>
-                    <td class="jne">
-                        <div class="control-group">
-                            <input type="text" name="region_state" class="form-control" required="true" minlength="2"
-                                   maxlength="30"
-                                   data-msg="You must agree to the terms and conditions"/>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><?=Language::getCheckoutLabel('comment');?></td>
-                    <td colspan="3">
-                        <textarea name="comment" class="form-control"></textarea>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+
+
+        <form class="form-horizontal" method="post" action="<?=$contextUrl;?>checkout/next" id="checkout-form">
+            <div class="widget-box">
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label"><?=Language::getCheckoutLabel('first_name');?>
+                        *</label>
+
+                    <div class="col-sm-9 col-md-9 col-lg-10 control-group">
+                        <input type="text" name="firstName" class="form-control input-sm" required="true" minlength="3"
+                               maxlength="20"
+                               data-msg-required="<?=Language::getCheckoutErrorLabel('required','first_name');?>"
+                               data-msg-minlength="<?=Language::getCheckoutErrorLabel('minLength',null, array(3));?>"
+                               data-msg-maxlength="<?=Language::getCheckoutErrorLabel('maxLength',null, array(20));?>"
+                                />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label"><?=Language::getCheckoutLabel('last_name');?>
+                        *</label>
+
+                    <div class="col-sm-9 col-md-9 col-lg-10 control-group">
+                        <input type="text" name="lastName" class="form-control" required="true" minlength="1"
+                               maxlength="100"
+                               data-msg-required="<?=Language::getCheckoutErrorLabel('required','last_name');?>"
+                               data-msg-minlength="<?=Language::getCheckoutErrorLabel('minLength',null, array(3));?>"
+                               data-msg-maxlength="<?=Language::getCheckoutErrorLabel('maxLength',null, array(20));?>"
+                                />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">Email *</label>
+
+                    <div class="col-sm-9 col-md-9 col-lg-10 control-group">
+                        <input type="text" name="email" class="form-control"
+                               required ="true"
+                               data-msg-required="<?=Language::getCheckoutErrorLabel('required','',array('Email'));?>"
+                               data-msg-email="<?=Language::getCheckoutErrorLabel('email');?>" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label"><?=Language::getCheckoutLabel('telephone');?>
+                        *</label>
+
+                    <div class="col-sm-9 col-md-9 col-lg-10 control-group">
+                        <input type="text" name="telephone" class="form-control" required="true" minlength="4"
+                               maxlength="20"
+                               data-msg-required="<?=Language::getCheckoutErrorLabel('required','telephone');?>"
+                               data-msg-minlength="<?=Language::getCheckoutErrorLabel('minLength',null, array(4));?>"
+                               data-msg-maxlength="<?=Language::getCheckoutErrorLabel('maxLength',null, array(20));?>"
+                               data-msg-digits="<?=Language::getCheckoutErrorLabel('digits');?>"
+                                />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label"><?=Language::getCheckoutLabel('address');?>
+                        *</label>
+
+                    <div class="col-sm-9 col-md-9 col-lg-10 control-group">
+                        <textarea name="address" class="form-control" required="true" minlength="4" rows="3"
+                                  maxlength="100"
+                                  data-msg-required="<?=Language::getCheckoutErrorLabel('required','address');?>"
+                                  data-msg-minlength="<?=Language::getCheckoutErrorLabel('minLength',null, array(4));?>"
+                                  data-msg-maxlength="<?=Language::getCheckoutErrorLabel('maxLength',null, array(100));?>"
+                                ></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label"><?=Language::getCheckoutLabel('city');?>
+                        *</label>
+
+                    <div class="col-sm-9 col-md-9 col-lg-10 control-group">
+                        <input type="text" name="city" class="form-control" required="true" minlength="4"
+                               maxlength="30"
+                               data-msg-required="<?=Language::getCheckoutErrorLabel('required','city');?>"
+                               data-msg-minlength="<?=Language::getCheckoutErrorLabel('minLength',null, array(4));?>"
+                               data-msg-maxlength="<?=Language::getCheckoutErrorLabel('maxLength',null, array(30));?>"
+                                />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label"><?=Language::getCheckoutLabel('post_code');?>
+                        *</label>
+
+                    <div class="col-sm-9 col-md-9 col-lg-10 control-group">
+                        <input type="text" name="post_code" class="form-control" required="true" minlength="2"
+                               maxlength="8"
+                               data-msg-required="<?=Language::getCheckoutErrorLabel('required','post_code');?>"
+                               data-msg-minlength="<?=Language::getCheckoutErrorLabel('minLength',null, array(2));?>"
+                               data-msg-maxlength="<?=Language::getCheckoutErrorLabel('maxLength',null, array(8));?>"
+                                />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label"><?=Language::getCheckoutLabel('country');?>
+                        *</label>
+
+                    <div class="col-sm-9 col-md-9 col-lg-10 control-group">
+                        <select class="form-control" name="country" required="true"
+                                data-msg-required="<?=Language::getCheckoutErrorLabel('required','country');?>">
+                            <option value=""><?=Language::getMainLabel('please_select_label');?></option>
+                            <? foreach(Language::getCheckoutLabel('countries') as $country) { ?>
+                            <option value="<?=$country;?>"><?=$country;?></option>
+                            <?};?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label"><?=Language::getCheckoutLabel('region_state');?>
+                        *</label>
+
+                    <div class="col-sm-9 col-md-9 col-lg-10 control-group">
+                        <input type="text" name="region_state" class="form-control" required="true" minlength="3"
+                               maxlength="30"
+                               data-msg-required="<?=Language::getCheckoutErrorLabel('required','region_state');?>"
+                               data-msg-minlength="<?=Language::getCheckoutErrorLabel('minLength',null, array(3));?>"
+                               data-msg-maxlength="<?=Language::getCheckoutErrorLabel('maxLength',null, array(30));?>"
+                                />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label"><?=Language::getCheckoutLabel('comment');?></label>
+
+                    <div class="col-sm-9 col-md-9 col-lg-10 control-group">
+                        <textarea name="comment" class="form-control" rows="6"
+                                  data-msg-maxlength="<?=Language::getCheckoutErrorLabel('maxLength',null, array(200));?>"></textarea>
+                    </div>
+                </div>
+            </div>
             <table class="table table-bordered tbl-cart">
                 <thead>
                 <tr>
@@ -181,7 +214,6 @@
                 <input type="submit" class="btn btn-primary" value="<?=Language::getCheckoutLabel('next');?>"/>
             </div>
         </form>
-
     </div>
 </div>
 <!-- End Cart -->
