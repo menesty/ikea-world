@@ -21,7 +21,7 @@
                 </li>
                 <? } ?>
                 <li class="divider"></li>
-                <li><a href="<?=$contextUrl?>cart"><?=Language::getMainLabel("total");?>: $<?=ShoppingCart::get()->getTotalPrice();?></a></li>
+                <li><a href="<?=$contextUrl?>cart"><?=Language::getCartLabel("total");?>: $<?=ShoppingCart::get()->getTotalPrice();?></a></li>
             </ul>
             <? }; ?>
         </div>

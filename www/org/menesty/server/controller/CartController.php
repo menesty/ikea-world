@@ -12,7 +12,7 @@ class CartController extends AbstractController
         $mainTemplate = $this->getBaseTemplate(array("bootstrap.touchspin"));
 
         $mainTemplate->setParam("main_content", new Template("cart.html"));
-        $mainTemplate->setParam("bestSeller_content", $this->getBestSellerTemplate(Language::getActiveLanguage(), 2, 'big'));
+        $mainTemplate->setParam("bestSeller_content", $this->getLeftProductBarTemplate(Language::getActiveLanguage(), 2, 'big'));
         return $mainTemplate;
     }
 

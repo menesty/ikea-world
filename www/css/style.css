@@ -344,3 +344,7 @@ footer .copyright{
     margin-top: 16px;
     margin-bottom: 16px;
 }
+
+.recent-product .prod-caption h4 {
+    height: auto;
+}

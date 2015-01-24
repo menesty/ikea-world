@@ -108,7 +108,7 @@ class ProductService extends AbstractService
         $connection = Database::get()->getConnection();
         $st = $connection->prepare("SELECT `id`, `art_number`, `title_$lang` as `title`, `short_description_$lang` as `short_description`,
                                     `designer`, `size_$lang` as `size`, `packing_$lang` as `packing`, `instruction_$lang` as `instruction`,
-                                    `price`, `published`, `available` from `products` where price <> 0 LIMIT :limit");
+                                    `price`, `published`, `available` from `products`  LIMIT :limit");
         $st->setFetchMode(PDO::FETCH_ASSOC);
         $st->bindValue(':limit', $count, PDO::PARAM_INT);
         $st->execute();

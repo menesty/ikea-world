@@ -1,7 +1,7 @@
 <? $mode = $this->params["bestSeller_mode"]; $index=0;?>
 <div class="col-lg-12 col-md-12 col-sm-6 <?=$mode!='small'?'visible-lg visible-md':'';?>">
     <div class="no-padding">
-        <span class="title"><?=Language::getMainLabel('best_seller');?></span>
+        <span class="title"><?=$this->params["product_title"];?></span>
     </div>
 
     <? foreach($this->params["bestSeller"] as $product) {

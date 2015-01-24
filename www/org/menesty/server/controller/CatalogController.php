@@ -52,7 +52,7 @@ class CatalogController extends AbstractController
 
         $template->setParam("category_content", $categories);
         $template->setParam("paging_content", $pagingTemplate);
-        $template->setParam("bestSeller_content", $this->getBestSellerTemplate(Language::getActiveLanguage(), 3));
+        $template->setParam("bestSeller_content", $this->getLeftProductBarTemplate(Language::getActiveLanguage(), 3));
 
 
         $mainTemplate = $this->getBaseTemplate();
@@ -69,7 +69,7 @@ class CatalogController extends AbstractController
         $product = $this->productService->getProductByArtNumber(Language::getActiveLanguage(), $id);
         $template = new Template("product_detail.html");
         $template->setParam("product", $product);
-        $template->setParam("bestSeller_content", $this->getBestSellerTemplate(Language::getActiveLanguage(), 2, 'big'));
+        $template->setParam("bestSeller_content", $this->getLeftProductBarTemplate(Language::getActiveLanguage(), 2, 'big'));
 
         $mainTemplate = $this->getBaseTemplate(array("jquery.blImageCenter", "bootstrap.touchspin", "smoothproducts"),
             array("smoothproducts"));

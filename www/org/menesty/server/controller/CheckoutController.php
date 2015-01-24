@@ -12,10 +12,11 @@ class CheckoutController extends AbstractController
      */
     public function defaultAction()
     {
-        $mainTemplate = $this->getBaseTemplate(array('jquery.validate','jquery.blImageCenter'));
+        $mainTemplate = $this->getBaseTemplate(array('jquery.validate', 'jquery.blImageCenter'));
 
         $mainTemplate->setParam("main_content", new Template("checkout.html"));
         $mainTemplate->setParam("clientInfo", ShoppingCart::getClientInfo());
+        $mainTemplate->setParam("recent_product_content", $this->getRecentProductBarTemplate(Language::getActiveLanguage(), 3));
 
         return $mainTemplate;
     }

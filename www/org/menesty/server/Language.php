@@ -35,6 +35,10 @@ class Language
         self::$activeLanguage = self::$defaultLanguage;
     }
 
+    public static function getSupported(){
+        return self::$supported;
+    }
+
     public static function getActiveLanguage()
     {
         return self::$activeLanguage;

@@ -1,0 +1,28 @@
+<? $mode = $this->params["bestSeller_mode"]; $index=0;?>
+<div class="col-lg-12 col-md-12 col-sm-6 <?=$mode!='small'?'visible-lg visible-md':'';?>">
+    <div class="no-padding">
+        <span class="title"><?=$this->params["product_title"];?></span>
+    </div>
+
+    <? foreach($this->params["bestSeller"] as $product) {
+    $index++;
+    ?>
+
+    <? if($mode == 'small') { ?>
+    <div class="hero-feature hidden-sm recent-product">
+        <?};?>
+        <div class="thumbnail text-center <?=$mode!='small'? 'col-lg-12 col-md-12 col-sm-6' : '';?> <?=$index!=1? ($mode=='small'?'hidden-sm' :'hidden-xs') :'';?> ">
+            <a href="/catalog/detail/<?=$product->getArtNumber();?>" class="link-p">
+                <img src="/image/<?=($mode=='small'?'thumb/':'normal/').$product->getArtNumber();?>" alt="">
+            </a>
+
+            <div class="caption prod-caption">
+                <h4><a href="/catalog/detail/<?=$product->getArtNumber();?>"><?=$product->getTitle();?></a></h4>
+                <p><?=$product->getShortDescription();?></p>
+            </div>
+        </div>
+        <? if($mode == 'small') { ?>
+    </div>
+    <?};?>
+    <?};?>
+</div>

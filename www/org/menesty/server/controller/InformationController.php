@@ -1,4 +1,5 @@
 <?php
+include_once(Configuration::get()->getClassPath() . "service" . DIRECTORY_SEPARATOR . "PageContentService.php");
 
 /**
  * User: Menesty
@@ -7,35 +8,42 @@
  */
 class InformationController extends AbstractController
 {
-    public function defaultAction(){
-        $mainTemplate = $this->getBaseTemplate();
+    private $pageContentService;
 
-        $mainTemplate->setParam("main_content", new Template("about_us.html"));
-
-        return $mainTemplate;
+    public function __construct()
+    {
+        parent::__construct();
+        $this->pageContentService = new PageContentService();
     }
 
-    public function policy(){
-        $mainTemplate = $this->getBaseTemplate();
-
-        $mainTemplate->setParam("main_content", new Template("about_us.html"));
-
-        return $mainTemplate;
+    public function defaultAction()
+    {
+        return $this->getContent("about_us");
     }
 
-    public function conditions(){
-        $mainTemplate = $this->getBaseTemplate();
-
-        $mainTemplate->setParam("main_content", new Template("about_us.html"));
-
-        return $mainTemplate;
+    public function policy()
+    {
+        return $this->getContent("policy");
     }
 
-    public function shipping(){
+    public function conditions()
+    {
+        return $this->getContent("conditions");
+    }
+
+    public function shipping()
+    {
+        return $this->getContent("shipping");
+    }
+
+    private function getContent($contentKey)
+    {
+        $pageContent = $this->pageContentService->getPageContent(Language::getActiveLanguage(), $contentKey);
+
         $mainTemplate = $this->getBaseTemplate();
-
+        $mainTemplate->setParam("model", $pageContent);
         $mainTemplate->setParam("main_content", new Template("about_us.html"));
-
+        $mainTemplate->setParam("recent_product_content", $this->getRecentProductBarTemplate(Language::getActiveLanguage(), 3));
         return $mainTemplate;
     }
 

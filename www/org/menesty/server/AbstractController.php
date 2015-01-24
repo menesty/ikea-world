@@ -30,6 +30,14 @@ abstract class AbstractController
         return $this->intValue(@$_POST[$key], $defaultValue, $minRange, $maxRange);
     }
 
+    /**
+     * @return array
+     */
+    protected function getPost()
+    {
+        return $_POST;
+    }
+
     protected function postArray($key)
     {
         return (array)@$_POST[$key];
@@ -81,14 +89,38 @@ abstract class AbstractController
     }
 
 
-    public function getBestSellerTemplate($lang, $count, $mode = 'small')
+    public function getLeftProductBarTemplate($lang, $count, $mode = 'small')
     {
         $items = $this->productService->getBestSeller($lang, $count);
-        $template = new Template("content/best_sell.html");
+        $template = new Template("content/left_bar_product.html");
         $template->setParam("bestSeller_mode", $mode);
         $template->setParam("bestSeller", $items);
+        $template->setParam("product_title", Language::getMainLabel("best_seller"));
 
         return $template;
+    }
+
+    public function getRecentProductBarTemplate($lang, $count, $mode = 'small')
+    {
+        $items = $this->productService->getBestSeller($lang, $count);
+        $template = new Template("content/left_bar_recent_product.html");
+        $template->setParam("bestSeller_mode", $mode);
+        $template->setParam("bestSeller", $items);
+        $template->setParam("product_title", Language::getMainLabel("recent_product"));
+
+        return $template;
+    }
+
+    private function getMethod(){
+        return strtoupper($_SERVER['REQUEST_METHOD']);
+    }
+
+    public function isGet(){
+        return $this->getMethod() == "GET";
+    }
+
+    public function isPost(){
+        return $this->getMethod() == "POST";
     }
 
 } 
