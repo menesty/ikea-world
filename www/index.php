@@ -8,6 +8,7 @@ date_default_timezone_set('UTC');
 
 startSession();
 
+include_once("org/menesty/server/functions.php");
 include_once("org/menesty/server/Language.php");
 include_once("org/menesty/server/Router.php");
 include_once("org/menesty/server/Template.php");

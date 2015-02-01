@@ -26,21 +26,22 @@ class CatalogController extends AbstractController
     public function defaultAction($categoryId = "")
     {
         $activeCategory = $this->categoryService->getByName(Language::getActiveLanguage(), $categoryId);
+        $activeCategoryId = !is_null($activeCategory) ? $activeCategory->getId() : null;
 
         $context = $this->getPageContextPath();
         $template = new Template("catalog_list.html");
         $template->setParam("pageContextUrl", $context);
 
-        $itemsCount = $this->productService->getPublishedCount();
+        $itemsCount = $this->productService->getPublishedCount($activeCategoryId);
         $pageCount = ceil($itemsCount / self::ITEM_PER_PAGE);
         $activePage = $this->getInt("page", 1, 1, $pageCount);
-
+        $offset = ($activePage - 1) * self::ITEM_PER_PAGE;
 
         $template->setParam("products", $this->productService->getPublishedRange(Language::getActiveLanguage(),
-            ($activePage - 1) * self::ITEM_PER_PAGE, self::ITEM_PER_PAGE));
+            $activeCategoryId, $offset, self::ITEM_PER_PAGE));
 
         $categories = new Template("content/categories.html");
-        $categories->setParam("categories", $this->categoryService->getCategories(Language::getActiveLanguage()));
+        $categories->setParam("categories", $this->categoryService->getCategories(Language::getActiveLanguage(), $activeCategory));
 
         $pagingTemplate = new Template("content/paging.html");
 

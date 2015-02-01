@@ -2,72 +2,87 @@
     <div class="col-xs-12 col-sm-6 col-lg-4">
         <div class="widget-box">
             <div class="widget-title">
-								<span class="icon">
-									<i class="fa fa-arrow-right"></i>
-								</span>
-                <h5>Refferers</h5>
+                <span class="icon"><i class="fa fa-arrow-right"></i></span>
+                <h5>Categories</h5>
             </div>
             <div class="widget-content nopadding">
                 <div class="list-group list-categ">
-                    <a href="#" class="list-group-item">0.1</a>
-                    <div class="level-2">
-                        <a href="#" class="list-group-item">1.1</a>
-                        <a href="#" class="list-group-item">1.2</a>
+                    <? foreach($this->params["categories"] as $category) { ?>
+                    <a href="/admin/categories/view/<?=$category->getId();?>" class="list-group-item"><?=$category->
+                        getName();?></a>
 
+                    <? if(!is_null($category->getSubCategories())) { ?>
+                    <div class="level-2">
+                        <? foreach($category->getSubCategories() as $subCategory) {?>
+                        <a href="/admin/categories/view/<?=$subCategory->getId();?>"
+                           class="list-group-item"><?=$subCategory->getName();?></a>
+
+                        <? if(!is_null($subCategory->getSubCategories())) { ?>
                         <div class="level-3">
-                            <a href="#" class="list-group-item">2.1</a>
-                            <a href="#" class="list-group-item">2.2</a>
-                            <a href="#" class="list-group-item">2.3</a>
+                            <? foreach($subCategory->getSubCategories() as $subSubCategory) {?>
+                            <span class="list-group-item"><?=$subSubCategory->getName();?></span>
+                            <?};?>
                         </div>
-                        <a href="#" class="list-group-item">1.3</a>
-                        <a href="#" class="list-group-item">1.4</a>
+                        <?};};?>
                     </div>
-                    <a href="#" class="list-group-item">0.2</a>
-                    <a href="#" class="list-group-item">0.3</a>
-                    <a href="#" class="list-group-item">0.4</a>
-                    <a href="#" class="list-group-item">0.5</a>
+                    <?};
+                    };?>
+
                 </div>
 
             </div>
         </div>
     </div>
-    <div class="col-xs-12 col-sm-12 col-lg-4">
+    <div class="col-xs-12 col-sm-12 col-lg-8">
         <div class="widget-box">
             <div class="widget-title">
 								<span class="icon">
 									<i class="fa fa-file"></i>
 								</span>
                 <h5>Most Visited Pages</h5>
+                <? if($this->getParam("allowSubCategories")) { ?>
+                <div class="buttons">
+                    <a title="Add" class="btn" href="/admin/categories/add/<?=$this->getParam('parent_id', true);?>"><i
+                            class="fa fa-plus"></i> <span
+                            class="text">Add</span></a>
+                </div>
+                <?}?>
             </div>
             <div class="widget-content nopadding">
                 <table class="table table-bordered table-striped table-hover">
                     <thead>
                     <tr>
-                        <th>Page</th>
-                        <th>Visits</th>
+                        <th>Title</th>
+                        <th>Translation</th>
+                        <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
+                    <? foreach($this->getParam('items') as $item) {?>
                     <tr>
-                        <td><a href="#">Shopping cart</a></td>
-                        <td>9440</td>
+                        <td>
+                            <?=$item['name'];?>
+                        </td>
+                        <td>
+                            <? foreach(Language::getSupported() as $lang) { ?>
+                            <div class="col-sm-8 col-lg-10"><?=$lang;?></div>
+                            <div class="col-sm-4 col-lg-2">
+                                <? if($item['name_'.$lang]) { ?>
+                                <i class="fa fa-check available"></i>
+                                <? } else { ?>
+                                <i class="fa fa-minus not-available"></i>
+                                <?}?>
+                            </div>
+                            <?}?>
+                        </td>
+                        <td>
+                            <a class="btn btn-default btn-sm" href="/admin/categories/edit/<?=$item['id'];?>"><i
+                                    class="fa fa-edit"></i> Edit</a>
+                            <a class="btn btn-default btn-sm" href="/admin/categories/delete/<?=$item['id'];?>"><i
+                                    class="fa fa-trash-o"></i> Delete</a>
+                        </td>
                     </tr>
-                    <tr>
-                        <td><a href="#">Blog</a></td>
-                        <td>6974</td>
-                    </tr>
-                    <tr>
-                        <td><a href="#">jQuery UI tips</a></td>
-                        <td>5377</td>
-                    </tr>
-                    <tr>
-                        <td><a href="#">100+ Free Icon Sets</a></td>
-                        <td>4990</td>
-                    </tr>
-                    <tr>
-                        <td><a href="#">How to use a Google Web Tools</a></td>
-                        <td>4834</td>
-                    </tr>
+                    <? };?>
                     </tbody>
                 </table>
             </div>

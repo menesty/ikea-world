@@ -12,6 +12,8 @@ class Category {
 
     private $subCategories;
 
+    private $parentId;
+
     /**
      * @return mixed
      */
@@ -59,4 +61,22 @@ class Category {
     {
         $this->name = $name;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
+    }
+
+    /**
+     * @param mixed $parentId
+     */
+    public function setParentId($parentId)
+    {
+        $this->parentId = $parentId;
+    }
+
+
 }

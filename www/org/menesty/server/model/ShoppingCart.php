@@ -13,6 +13,7 @@ class ShoppingCart
     private static $clientOrderInfo;
 
     private $items = array();
+    private $currency;
 
     public function addItem(Product $product, $count)
     {
@@ -32,6 +33,24 @@ class ShoppingCart
 
         self::update($this);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+
+    /**
+     * @param mixed $currency
+     */
+    public function setCurrency($currency)
+    {
+        $this->currency = $currency;
+    }
+
+
 
     private static function update(ShoppingCart $cart)
     {

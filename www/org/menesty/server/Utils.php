@@ -33,7 +33,8 @@ class Utils
     public static function populateObject($entity, $rawData)
     {
         foreach ($rawData as $property => $value) {
-            self::setFieldValue($property, $entity, trim($value));
+            $value = trim($value);
+            self::setFieldValue($property, $entity, $value == "" ? null : $value);
         }
 
         return $entity;

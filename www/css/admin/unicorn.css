@@ -16,7 +16,7 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   margin-top: -20px;
-  background: #000000 url('../img/pattern.png') repeat scroll top center;
+  background: #000000 url('/img/admin/pattern.png') repeat scroll top center;
 }
 @media (nax-width: 767px) {
   body {
@@ -166,7 +166,7 @@ a:hover {
   z-index: 0;
 }
 #header h1 {
-  background: url("../img/logo.png") no-repeat scroll 0 0 transparent;
+  background: url("/img/admin/logo.png") no-repeat scroll 0 0 transparent;
   height: 31px;
   left: 15px;
   line-height: 600px;
@@ -180,7 +180,7 @@ a:hover {
 }
 @media (max-width: 440px) {
   #header h1 {
-    background: url("../img/logo-min.png") no-repeat scroll 0 0 transparent;
+    background: url("/img/admin/logo-min.png") no-repeat scroll 0 0 transparent;
     width: 32px;
   }
 }
@@ -625,7 +625,7 @@ a:hover {
   width: 205px;
 }
 #sidebar > ul > li.active > a {
-  background: url("../img/menu-active.png") no-repeat scroll right center transparent !important;
+  background: url("/img/admin/menu-active.png") no-repeat scroll right center transparent !important;
 }
 @media (max-width: 767px) {
   #sidebar {
@@ -963,7 +963,7 @@ a:hover {
 #breadcrumb a {
   padding: 8px 20px 8px 10px;
   display: inline-block;
-  background-image: url('../img/breadcrumb.png');
+  background-image: url('/img/admin/breadcrumb.png');
   background-position: center right;
   background-repeat: no-repeat;
   font-size: 11px;
@@ -5886,11 +5886,11 @@ body[data-color="purple"].flat .ui-dialog .ui-dialog-titlebar {
     padding-left: 30px;
 }
 
-.level-3 a {
+.level-3 span {
     padding-left: 50px;
 }
 
-.level-2 a, .level-3 a {
+.level-2 a, .level-3 span {
     padding-bottom: 5px;
     padding-top: 5px;
     border-top: 0px;
@@ -5911,4 +5911,12 @@ body[data-color="purple"].flat .ui-dialog .ui-dialog-titlebar {
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
     border-bottom: 0px;
+}
+
+.available {
+    color: #208D4E;
+}
+
+.not-available {
+    color: #9F2F24;
 }

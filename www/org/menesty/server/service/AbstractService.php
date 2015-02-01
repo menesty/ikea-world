@@ -28,5 +28,29 @@ abstract class AbstractService
         return $products;
     }
 
+    protected function createLangAdminQueryCheck($languages, $fields)
+    {
+        $queryPart = "";
+        foreach ($fields as $field) {
+            foreach ($languages as $lang) {
+                $queryPart .= $this->getBooleanConditionByField($field . "_" . $lang) . ",";
+            }
+        }
+
+        return rtrim($queryPart, ",");
+    }
+
+    protected function getBooleanConditionByField($field)
+    {
+        return "if(`" . $field . "` IS NULL or trim(`" . $field . "`)='' ,false, true ) as `" . $field . "`";
+    }
+
     protected abstract function newInstance();
+
+    protected function getBoolean($value) {
+        if(!is_null($value) && ( (is_int($value) && $value >0)) ||  trim($value) == "on" || trim($value) == "true") {
+            return true;
+        }
+        return false;
+    }
 } 

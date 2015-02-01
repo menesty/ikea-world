@@ -1,0 +1,116 @@
+<div class="col-xs-12">
+    <? $model = $this->getParam("model");?>
+
+    <div class="widget-box">
+        <div class="widget-title">
+								<span class="icon">
+									<i class="fa fa-th-list"></i>
+								</span>
+            <h5><?=@$model['id']? 'Edit' :'Edit';?></h5>
+
+        </div>
+        <div class="widget-content nopadding">
+            <form action="/admin/products/update/<?=@$model['id'];?>" method="post"
+                  class="form-horizontal action-form">
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">Art Number</label>
+                    <div class="col-sm-9 col-md-9 col-lg-10">
+                        <input class="form-control input-sm" type="text" name="art_number" value="<?=$model['art_number'];?>">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">Price</label>
+                    <div class="col-sm-9 col-md-9 col-lg-10">
+                        <input class="form-control input-sm" type="text" name="price" value="<?=$model['price'];?>">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">Designer</label>
+                    <div class="col-sm-9 col-md-9 col-lg-10">
+                        <input class="form-control input-sm" type="text" name="designer" value="<?=$model['designer'];?>">
+                    </div>
+                </div>
+
+                <? $activeCategories = $this->getParam('activeCategories');?>
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">Category</label>
+                    <div class="col-sm-9 col-md-9 col-lg-10">
+                        <select name="category">
+                            <option></option>
+                            <? foreach($this->getParam('categories') as $category) {?>
+                            <optgroup label="<?=$category->getName();?>"></optgroup>
+                                <? foreach($category->getSubCategories() as $subCategory) {?>
+                                    <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$subCategory->getName();?>"></optgroup>
+                                    <? foreach($subCategory->getSubCategories() as $subSubCategory) {?>
+                                    <option value="<?=$subSubCategory->getId();?>" <?=in_array($subSubCategory->getId(),$activeCategories)?'selected': '';?>>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$subSubCategory->getName();?></option>
+                                <? }}};?>
+                        </select>
+                    </div>
+                </div>
+
+<?
+
+ $fields = array("title" => "input", "short_description" => "text", "size" => "textarea", "packing" => "textarea", "instruction"=>"textarea");
+    foreach($fields as $field=>$type) {
+        $index=0;
+?>
+                <div class="tabbable inline" style="margin: 5px 5px 0px 5px;">
+                    <ul class="nav nav-tabs tab-bricky" id="<?=$field;?>Tab">
+                        <?  foreach(Language::getSupported() as $lang) { ?>
+                        <li class="<?=$index==0?'active':'';?>">
+                            <a data-toggle="tab" href="#<?=$field;?>Tab<?=$index;?>"><?=$lang;?></a>
+                        </li>
+                        <? $index++;}?>
+                    </ul>
+
+                    <div class="tab-content">
+                        <? $index=0; foreach(Language::getSupported() as $lang) { ?>
+                        <div id="<?=$field;?>Tab<?=$index;?>" class="tab-pane <?=$index==0?'active':'';?>">
+                            <div class="widget-box">
+                                <div class="widget-content nopadding">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-md-3 col-lg-2 control-label"><?=str_replace("_"," ",ucfirst($field));?></label>
+
+                                        <div class="col-sm-9 col-md-9 col-lg-10">
+                                            <? if($type == 'input') {?>
+                                            <input type="text" class="form-control input-sm" name="<?=$field;?>_<?=$lang;?>"
+                                                   value="<?=htmlspecialchars(@$model[$field.'_'.$lang]);?>"/>
+                                            <? } else { ?>
+                                            <textarea rows="7" class="form-control"
+                                                      name="<?=$field;?>_<?=$lang;?>"><?=htmlspecialchars(@$model[$field.'_'.$lang]);?></textarea>
+                                            <? } ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <? $index++;}?>
+                    </div>
+                </div>
+
+<? } ?>
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">Published</label>
+                    <div class="col-sm-9 col-md-9 col-lg-10">
+                        <label><input type="checkbox" name="published" <?=$model['published'] == 1?'checked' : ''?> /> </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">Available</label>
+                    <div class="col-sm-9 col-md-9 col-lg-10">
+                        <label><input type="checkbox" name="available" <?=$model['available'] == 1?'checked' : ''?> /></label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                    or <a class="text-danger" href="#">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

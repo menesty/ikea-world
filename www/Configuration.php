@@ -17,16 +17,6 @@ class Configuration
 
     private $languageMessagePath;
 
-    private $dbHost = "localhost";
-
-    private $dbDriver = "mysql";
-
-    private $dbName = "u580543188_world";
-
-    private $dbUser = "u580543188_world";
-
-    private $dbPassword = "ikea-world";
-
     private $controllerPath;
 
     private $templatePath;
@@ -43,6 +33,8 @@ class Configuration
 
     private $mode = Configuration::DEV_MODE;
 
+    private $configuration;
+
     private function __construct()
     {
         $this->siteRoot = $_SERVER["DOCUMENT_ROOT"];
@@ -53,9 +45,12 @@ class Configuration
         $this->dataPath = $this->classPath . "data" . DIRECTORY_SEPARATOR;
         $this->languageMessagePath = $this->dataPath . "languages" . DIRECTORY_SEPARATOR;
 
+        $this->configuration = parse_ini_file("conf/conf.ini", true);
+
     }
 
-    public function getLanguageMessagePath(){
+    public function getLanguageMessagePath()
+    {
         return $this->languageMessagePath;
     }
 
@@ -127,22 +122,22 @@ class Configuration
 
     public function getDbHost()
     {
-        return $this->dbHost;
+        return $this->configuration["database"]["dbHost"];
     }
 
     public function getDbUser()
     {
-        return $this->dbUser;
+        return $this->configuration["database"]["dbUser"];
     }
 
     public function getDbName()
     {
-        return $this->dbName;
+        return $this->configuration["database"]["dbName"];
     }
 
     public function getDbPassword()
     {
-        return $this->dbPassword;
+        return $this->configuration["database"]["dbPassword"];
     }
 
     public function getControllerPath()
@@ -152,7 +147,7 @@ class Configuration
 
     public function getDbDriver()
     {
-        return $this->dbDriver;
+        return $this->configuration["database"]["dbDriver"];
     }
 
 }

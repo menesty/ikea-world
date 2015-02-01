@@ -42,7 +42,7 @@ class PageContentService extends AbstractService
     public function getAdminPageContent($key)
     {
         $connection = Database::get()->getConnection();
-        $st = $connection->prepare("SELECT * from page_content where `content_key` = :contentKey");
+        $st = $connection->prepare("SELECT * from `page_content` where `content_key` = :contentKey");
 
         $st->setFetchMode(PDO::FETCH_ASSOC);
         $st->execute(array("contentKey" => $key));

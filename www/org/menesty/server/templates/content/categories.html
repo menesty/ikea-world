@@ -11,7 +11,7 @@
             <? if(!is_null($category->getSubCategories())) { ?>
             <div class="level_2">
                 <? foreach($category->getSubCategories() as $subCategory) {?>
-                <a href="/<?=$contextUrl.$subCategory->getName();?>" class="list-group-item"><?=$subCategory->getName();?></a>
+                <a href="<?=$contextUrl.$subCategory->getName();?>" class="list-group-item"><?=$subCategory->getName();?></a>
 
                 <? if(!is_null($subCategory->getSubCategories())) { ?>
                 <div class="level_3">
