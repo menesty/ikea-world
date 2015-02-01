@@ -41,7 +41,7 @@ class ShoppingCart
     }
 
     /**
-     * @return mixed
+     * @return Currency
      */
     public function getCurrency()
     {
@@ -115,6 +115,11 @@ class ShoppingCart
     public function getItems()
     {
         return $this->items;
+    }
+
+    public function clear()
+    {
+        $this->items = array();
     }
 
     public static function isEmpty()

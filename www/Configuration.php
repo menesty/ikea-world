@@ -150,4 +150,7 @@ class Configuration
         return $this->configuration["database"]["dbDriver"];
     }
 
+    public function getPublicKey(){
+        return $this->configuration["encryption"]["passwordKey"];
+    }
 }

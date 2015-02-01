@@ -34,20 +34,35 @@ $(function () {
         var count = 1;
         var countElName = $(this).data("count");
 
-        if(countElName !== "undefined") {
+        if (countElName !== "undefined") {
             count = $(countElName).val();
         }
 
-        $.post(contextUrl + "cart/addItem", {count: count, id: $(this).data("id")}, function (data) {
-           if(!data.error) {
-               refreshCartMenu(data.content);
-           }
+        $.post(contextUrl + 'cart/addItem', {count: count, id: $(this).data("id")}, function (data) {
+            if (!data.error) {
+                refreshCartMenu(data.content);
+            }
         });
 
         return false;
     });
 
-    if($('#checkout-form').exist()){
+    $('#searchButton').on('click', function () {
+        forwardSearchPage();
+    });
+
+    $('#searchText').keypress(function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if(keycode == '13'){
+            forwardSearchPage();
+        }
+    });
+
+    function forwardSearchPage(){
+        window.location.assign(contextUrl + 'search/' + $('#searchText').val());
+    }
+
+    if ($('#checkout-form').exist()) {
 
         var validator = $("#checkout-form").validate({
             rules: {
@@ -62,16 +77,16 @@ $(function () {
 
             },
 
-            highlight: function(element) {
+            highlight: function (element) {
                 $(element).closest('.control-group').addClass('has-error');
             },
-            unhighlight: function(element) {
+            unhighlight: function (element) {
                 $(element).closest('.control-group').removeClass('has-error');
             },
             errorElement: 'span',
             errorClass: 'help-block',
-            errorPlacement: function(error, element) {
-                if(element.parent('.input-group').length) {
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
                     error.insertAfter(element.parent());
                 } else {
                     error.insertAfter(element);
@@ -88,7 +103,7 @@ $(function () {
         }
     });
 
-    function refreshCartMenu(content){
+    function refreshCartMenu(content) {
         $("#menu-cart").replaceWith(content);
     }
 });

@@ -91,6 +91,64 @@ class ProductService extends AbstractService
         return $this->transform($st->fetchAll());
     }
 
+    public function getSearchPublishedRange($lang, $searchStrings, $offset, $limit)
+    {
+
+        $where = $this->searchBuildWhere($lang, $searchStrings);
+
+        $connection = Database::get()->getConnection();
+        $st = $connection->prepare("SELECT `id`, `art_number`, `title_$lang` as `title`, `short_description_$lang` as `short_description`,
+                                    `designer`, `size_$lang` as `size`, `packing_$lang` as `packing`, `instruction_$lang` as `instruction`,
+                                    `price`, `published`, `available` from `products` " . $where[0] . " LIMIT :limit OFFSET :offset");
+        $st->setFetchMode(PDO::FETCH_ASSOC);
+
+        $st->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $st->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+        foreach ($where[1] as $key => $param) {
+            $st->bindValue(':' . $key, $param, PDO::PARAM_STR);
+        }
+
+        $st->execute();
+
+        return $this->transform($st->fetchAll());
+    }
+
+    private function searchBuildWhere($lang, array $searchStrings)
+    {
+        $searchFields = array("art_number" => false, "title" => true, "short_description" => true, "designer" => false, "size" => true, "packing" => true, "instruction" => true);
+        $where = " ";
+        $params = array();
+
+        foreach ($searchFields as $field => $translated) {
+            $where .= ' (';
+            $index = 0;
+            foreach ($searchStrings as $searchString) {
+                $fieldName = $field . ($translated ? '_' . $lang : '');
+                $where .= ' `' . $fieldName . '` LIKE :' . $fieldName . $index . ' OR';
+                $params[$fieldName . $index] = '%' . $searchString . '%';
+                $index++;
+            }
+            $where = rtrim($where, 'OR') . ' ) OR';
+        }
+
+        $where = ' WHERE' . rtrim($where, 'OR');
+
+        return array($where, $params);
+
+    }
+
+    public function getSearchPublishedCount($lang, array $searchStrings)
+    {
+        $where = $this->searchBuildWhere($lang, $searchStrings);
+        $connection = Database::get()->getConnection();
+        $st = $connection->prepare('SELECT count(id) from `products` ' . $where[0]);
+        $st->setFetchMode(PDO::FETCH_NUM);
+        $st->execute($where[1]);
+        $result = $st->fetch();
+        return $result[0];
+    }
+
     public function getAdminRange($languages, $offset, $limit)
     {
         $columns = array("title", "short_description", "size", "packing", "instruction");

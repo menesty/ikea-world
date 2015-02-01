@@ -1,0 +1,21 @@
+<? $contextUrl = $this->params["contextUrl"]; ?>
+
+<div class="col-lg-3 col-md-3 col-sm-12">
+    <!-- Categories -->
+    <?=$this->getParam("category_content");?>
+    <!-- End Categories -->
+</div>
+
+<div class="clearfix visible-sm"></div>
+
+<!-- Catalogue -->
+<div class="col-lg-9 col-md-9 col-sm-12">
+    <div class="col-lg-12 col-sm-12">
+        <span class="title uppercase"><?=Language::getMainLabel('search_result');?></span>
+    </div>
+
+    <div class="col-lg-12 col-sm-12 hero-feature text-center">
+        <?=Language::getMainLabel('search_no_result');?>
+    </div>
+</div>
+<!-- End Catalogue -->

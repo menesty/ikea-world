@@ -22,6 +22,8 @@ class Product
     private $available;
     private $images = null;
 
+    const MARGIN = 1.25;
+
     /**
      * @return mixed
      */
@@ -244,7 +246,7 @@ class Product
 
     public function getSellPrice()
     {
-        return $this->price;
+        return $this->price * self::MARGIN;
     }
 
 } 

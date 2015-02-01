@@ -7,6 +7,7 @@
  */
 class ClientOrderInfo
 {
+    private $id;
     private $firstName;
     private $lastName;
     private $email;
@@ -17,6 +18,23 @@ class ClientOrderInfo
     private $region_state;
     private $comment;
     private $country;
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
 
     /**
      * @return mixed

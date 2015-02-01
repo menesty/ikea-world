@@ -19,7 +19,7 @@
 
         <?=$product->getDescription();?>
         <hr/>
-        <h3><?=ShoppingCart::get()->getCurrency()->getName();?> <?=$product->getPrice();?></h3>
+        <h3><?=ShoppingCart::get()->getCurrency()->getName();?> <?=$product->getSellPrice();?></h3>
 
         <div class="row input-qty-detail">
             <input type="text" class="form-control input-qty text-center" value="1" id="product-count">
