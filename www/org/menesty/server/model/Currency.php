@@ -7,24 +7,31 @@
  */
 class Currency
 {
-    private $currency;
+    private $name;
     private $rate;
+
+    public function __construct($name = "PLN", $rate = 1)
+    {
+        $this->name = $name;
+        $this->rate = $rate;
+    }
 
     /**
      * @return mixed
      */
-    public function getCurrency()
+    public function getName()
     {
-        return $this->currency;
+        return $this->name;
     }
 
     /**
-     * @param mixed $currency
+     * @param mixed $name
      */
-    public function setCurrency($currency)
+    public function setName($name)
     {
-        $this->currency = $currency;
+        $this->name = $name;
     }
+
 
     /**
      * @return mixed

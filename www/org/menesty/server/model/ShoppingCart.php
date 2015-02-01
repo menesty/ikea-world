@@ -5,6 +5,7 @@
  * Time: 14:40
  */
 include_once(Configuration::get()->getClassPath() . "model" . DIRECTORY_SEPARATOR . "CartItem.php");
+include_once(Configuration::get()->getClassPath() . "model" . DIRECTORY_SEPARATOR . "Currency.php");
 include_once(Configuration::get()->getClassPath() . "model" . DIRECTORY_SEPARATOR . "ClientOrderInfo.php");
 
 class ShoppingCart
@@ -14,6 +15,11 @@ class ShoppingCart
 
     private $items = array();
     private $currency;
+
+    public function __construct()
+    {
+        $this->currency = new Currency();
+    }
 
     public function addItem(Product $product, $count)
     {
@@ -49,7 +55,6 @@ class ShoppingCart
     {
         $this->currency = $currency;
     }
-
 
 
     private static function update(ShoppingCart $cart)

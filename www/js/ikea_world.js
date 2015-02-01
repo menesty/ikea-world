@@ -31,7 +31,14 @@ $(function () {
     });
 
     $('.add-to-cart').on('click', function () {
-        $.post(contextUrl + "cart/addItem", {count: 1, id: $(this).data("id")}, function (data) {
+        var count = 1;
+        var countElName = $(this).data("count");
+
+        if(countElName !== "undefined") {
+            count = $(countElName).val();
+        }
+
+        $.post(contextUrl + "cart/addItem", {count: count, id: $(this).data("id")}, function (data) {
            if(!data.error) {
                refreshCartMenu(data.content);
            }

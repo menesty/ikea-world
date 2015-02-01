@@ -90,4 +90,9 @@ class Language
     {
         return self::getMessage("footer", $key);
     }
+
+    public static function getProductLabel($key)
+    {
+        return self::getMessage("product", $key);
+    }
 }

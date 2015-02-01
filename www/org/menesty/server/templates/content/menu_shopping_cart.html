@@ -16,12 +16,12 @@
                 <li>
                     <a href="<?=$contextUrl;?>catalog/detail/<?=$cartItem->getArtNumber();?>">
                         <b><?=$cartItem->getTitle();?></b>
-                        <span>x<?=$cartItem->getCount();?> $<?=$cartItem->getTotalPrice();?></span>
+                        <span>x<?=$cartItem->getCount();?> <?=ShoppingCart::get()->getCurrency()->getName().' '.$cartItem->getTotalPrice();?></span>
                     </a>
                 </li>
                 <? } ?>
                 <li class="divider"></li>
-                <li><a href="<?=$contextUrl?>cart"><?=Language::getCartLabel("total");?>: $<?=ShoppingCart::get()->getTotalPrice();?></a></li>
+                <li><a href="<?=$contextUrl?>cart"><?=Language::getCartLabel("total");?>: <?=ShoppingCart::get()->getCurrency()->getName().' '.ShoppingCart::get()->getTotalPrice();?></a></li>
             </ul>
             <? }; ?>
         </div>

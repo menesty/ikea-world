@@ -19,29 +19,29 @@
 
         <?=$product->getDescription();?>
         <hr/>
-        <h3>$428.96</h3>
+        <h3><?=ShoppingCart::get()->getCurrency()->getName();?> <?=$product->getPrice();?></h3>
 
         <div class="row input-qty-detail">
-            <input type="text" class="form-control input-qty text-center" value="1">
-            <button class="btn btn-primary pull-left">add to cart</button>
+            <input type="text" class="form-control input-qty text-center" value="1" id="product-count">
+            <button class="btn btn-primary pull-left add-to-cart" data-id="<?=$product->getId();?>" data-count="#product-count" ><?=Language::getMainLabel('add_to_cart');?></button>
         </div>
 
         <div class="row product-details">
             <hr/>
             <div class="col-lg-6 col-sm-6">
-                <h4>Дизайнер:</h4>
+                <h4><?=Language::getProductLabel('designer');?>:</h4>
                 <?=nl2br($product->getDesigner());?>
 
-                <h4>Размеры товара:</h4>
+                <h4><?=Language::getProductLabel('packing');?>:</h4>
                 <?=nl2br($product->getPacking());?>
 
-                <h4>Инструкция по уходу:</h4>
+                <h4><?=Language::getProductLabel('instruction');?>:</h4>
                 <?=nl2br($product->getInstruction());?>
             </div>
 
 
             <div class="col-lg-6 col-sm-6">
-                <h4>Описание и размеры товара:</h4>
+                <h4><?=Language::getProductLabel('size');?>:</h4>
                 <?=nl2br($product->getSize());?>
             </div>
         </div>
