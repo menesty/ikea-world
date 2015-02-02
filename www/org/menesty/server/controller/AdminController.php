@@ -96,7 +96,7 @@ class AdminController extends AbstractAdminController
             $model = array("parent_id" => is_null($id) ? "" : (int)$id);
             $template->setParam("model", $model);
         } elseif ($action == "update" && $this->isPost()) {
-            $postData = $this->isPost();
+            $postData = $this->getPost();
 
             if ($categoryService->isThirdLevel($postData["parent_id"])) {
                 return new Redirect("/admin/categories/view/" . id);

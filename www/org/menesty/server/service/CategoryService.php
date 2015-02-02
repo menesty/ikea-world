@@ -157,7 +157,7 @@ class CategoryService extends AbstractService
 
             foreach ($languages as $lang) {
                 $query .= "`name_$lang` = :name_$lang,";
-                $params["name_$lang"] = $data["name_$lang"];
+                $params["name_$lang"] = trim($data["name_$lang"]);
             }
 
             $query = rtrim($query, ",");
@@ -170,7 +170,7 @@ class CategoryService extends AbstractService
             foreach ($languages as $lang) {
                 $query .= "`name_$lang`,";
                 $partQuery .= ":name_$lang,";
-                $params["name_$lang"] = $data["name_$lang"];
+                $params["name_$lang"] = trim($data["name_$lang"]);
             }
             $query = rtrim($query, ",") . ") VALUES (" . rtrim($partQuery, ",") . ")";
 
