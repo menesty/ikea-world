@@ -1,4 +1,8 @@
 <?php
+include_once(Configuration::get()->getClassPath() . "DigestAuthentication.php");
+$digestAuthentication = new DigestAuthentication();
+$digestAuthentication->auth();
+
 include_once(Configuration::get()->getClassPath() . "AbstractAdminController.php");
 include_once(Configuration::get()->getClassPath() . "service" . DIRECTORY_SEPARATOR . "PageContentService.php");
 include_once(Configuration::get()->getClassPath() . "service" . DIRECTORY_SEPARATOR . "CategoryService.php");

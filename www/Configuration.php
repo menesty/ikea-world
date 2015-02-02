@@ -107,12 +107,12 @@ class Configuration
 
     public function getAuthUser()
     {
-        return $this->authUser;
+        return $this->configuration["admin"]["authUser"];
     }
 
     public function getAuthPassword()
     {
-        return $this->authPassword;
+        return $this->configuration["admin"]["authPassword"];
     }
 
     public function getSiteRoot()
