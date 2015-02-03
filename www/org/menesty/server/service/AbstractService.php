@@ -7,7 +7,7 @@
  */
 abstract class AbstractService
 {
-    protected function transformRow($row)
+    public function transformRow($row)
     {
         if ($row) {
             $entity = $this->newInstance();
@@ -19,7 +19,7 @@ abstract class AbstractService
         return null;
     }
 
-    protected function transform($rawData)
+    public function transform($rawData)
     {
         $products = array();
         foreach ($rawData as $row) {

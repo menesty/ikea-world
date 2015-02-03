@@ -26,7 +26,7 @@ class CartController extends AbstractController
         $result = new stdClass();
         $result->error = false;
 
-        if (!is_null($product) /* && $product->getPublished() && $product->getAvailable()*/) {
+        if (!is_null($product) && $product->getPublished() && $product->getAvailable()) {
             ShoppingCart::get()->addItem($product, $count);
             $template = new Template("content/menu_shopping_cart.html");
             $template->setParam("contextUrl", $this->getContextPath());

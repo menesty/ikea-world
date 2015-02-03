@@ -93,14 +93,14 @@ class AdminController extends AbstractAdminController
 
             $template->setParam("allowSubCategories", !$categoryService->isThirdLevel($id));
         } elseif ($action == "edit" && $categoryService->isValid($id)) {
-            if ($categoryService->isThirdLevel($id)) {
-                return new Redirect("/admin/categories/view/" . id);
-            }
-
             $template = new Template("admin/page/category_edit.html");
             $model = $categoryService->getAdminCategory($id);
             $template->setParam("model", $model);
         } elseif ($action == "add" && ((!is_null($id) && $categoryService->isValid($id)) || is_null($id))) {
+            if ($categoryService->isThirdLevel($id)) {
+                return new Redirect("/admin/categories/view/" . id);
+            }
+
             $template = new Template("admin/page/category_edit.html");
             $model = array("parent_id" => is_null($id) ? "" : (int)$id);
             $template->setParam("model", $model);
