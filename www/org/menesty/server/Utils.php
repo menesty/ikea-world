@@ -9,6 +9,7 @@ class Utils
 {
     public static function getProductImagePath($artNumber)
     {
+        $artNumber = strtolower($artNumber);
         $path = "";
 
         for ($i = 1; $i < 5; $i++) {
@@ -17,7 +18,7 @@ class Utils
 
         $imgPath = Configuration::get()->getClassPath() . "data" . DIRECTORY_SEPARATOR . "images" . DIRECTORY_SEPARATOR;
 
-        return $imgPath . $path . $artNumber . DIRECTORY_SEPARATOR;
+        return $imgPath . strtolower($path) . $artNumber . DIRECTORY_SEPARATOR;
     }
 
     private static function setFieldValue($field, $object, $value)

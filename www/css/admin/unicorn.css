@@ -5883,11 +5883,11 @@ body[data-color="purple"].flat .ui-dialog .ui-dialog-titlebar {
 }
 
 .level-2 a {
-    padding-left: 30px;
+    padding-left: 10px;
 }
 
 .level-3 span {
-    padding-left: 50px;
+    padding-left: 10px;
 }
 
 .level-2 a, .level-3 span {

@@ -12,15 +12,23 @@
                         getName();?></a>
 
                     <? if(!is_null($category->getSubCategories())) { ?>
-                    <div class="level-2">
+                    <div class="level-2" id="sub_category_<?=$category->getId();?>">
                         <? foreach($category->getSubCategories() as $subCategory) {?>
-                        <a href="/admin/categories/view/<?=$subCategory->getId();?>"
-                           class="list-group-item"><?=$subCategory->getName();?></a>
-
+                        <div class="row">
+                            <span class="col-xs-1 col-sm-1 col-lg-1 <?=$subCategory->hasCategories()?'allow-collapse':'';?>"
+                                  data-category-id="<?=$subCategory->getId();?>"></span>
+                            <a href="/admin/categories/view/<?=$subCategory->getId();?>"
+                               class="list-group-item col-xs-11 col-sm-11 col-lg-11"
+                               id="sub_category_item_<?=$subCategory->getId();?>"><?=$subCategory->getName();?></a>
+                        </div>
                         <? if(!is_null($subCategory->getSubCategories())) { ?>
-                        <div class="level-3">
+                        <div class="level-3" id="sub_sub_category_<?=$subCategory->getId();?>">
                             <? foreach($subCategory->getSubCategories() as $subSubCategory) {?>
-                            <span class="list-group-item"><?=$subSubCategory->getName();?></span>
+                            <div class="row">
+                                <span class="col-xs-2 col-sm-2 col-lg-2"></span>
+                                <span class="list-group-item col-xs-10 col-sm-10 col-lg-10"><?=$subSubCategory->
+                                    getName();?></span>
+                            </div>
                             <?};?>
                         </div>
                         <?};};?>
@@ -39,7 +47,7 @@
 								<span class="icon">
 									<i class="fa fa-file"></i>
 								</span>
-                <h5>Most Visited Pages</h5>
+                <h5><?=$this->getParam('activeCategoryName');?></h5>
                 <? if($this->getParam("allowSubCategories")) { ?>
                 <div class="buttons">
                     <a title="Add" class="btn" href="/admin/categories/add/<?=$this->getParam('parent_id', true);?>"><i
@@ -89,3 +97,50 @@
         </div>
     </div>
 </div>
+
+<script>
+    var active_category = '<?=$this->getParam("activeCategoryId")?>';
+    $(function () {
+        $('.level-2, .level-3').each(function (index, el) {
+            $(el).hide();
+        });
+
+        var scrollElement = '';
+        if ($('#sub_category_' + active_category).length > 0) {
+            $('#sub_category_' + active_category).show();
+            scrollElement = '#sub_category_' + active_category;
+        } else if ($('#sub_category_item_' + active_category).length > 0) {
+            $('#sub_category_item_' + active_category).parent().parent().show();
+            $('#sub_sub_category_' + active_category).show();
+            scrollElement = '#sub_category_item_' + active_category;
+        }
+
+        $('.allow-collapse').each(function (i, el) {
+            var id = $(this).data("category-id");
+
+            if ($('#sub_sub_category_' + id).is(':visible')) {
+                $(el).html("-");
+            } else {
+                $(el).html("+");
+            }
+
+
+            $(el).on('click', function () {
+                var value = $(this).html();
+                var id = $(this).data("category-id");
+
+                if ($('#sub_sub_category_' + id).is(':visible')) {
+                    $('#sub_sub_category_' + id).hide();
+                    $(this).html("+");
+                } else {
+                    $('#sub_sub_category_' + id).show();
+                    $(this).html("-");
+                }
+            });
+        });
+
+        $('html, body').animate({
+            scrollTop: $('.buttons .fa-plus').offset().top-30
+        });
+    });
+</script>

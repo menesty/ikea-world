@@ -21,7 +21,7 @@ class ImageController
         $artPath = Utils::getProductImagePath($id);
         $thumbPath = $artPath . "thumb" . DIRECTORY_SEPARATOR . $id . "_0.jpg";
 
-        echo file_get_contents($thumbPath);
+        $this->showImage($thumbPath);
     }
 
     /**
@@ -32,7 +32,7 @@ class ImageController
         $artPath = Utils::getProductImagePath($id);
         $thumbPath = $artPath . "normal" . DIRECTORY_SEPARATOR . $id . "_" . $num . ".jpg";
 
-        echo file_get_contents($thumbPath);
+        $this->showImage($thumbPath);
     }
 
     /**
@@ -43,6 +43,14 @@ class ImageController
         $artPath = Utils::getProductImagePath($id);
         $thumbPath = $artPath . "zoom" . DIRECTORY_SEPARATOR . $id . "_" . $num . ".jpg";
 
-        echo file_get_contents($thumbPath);
+        $this->showImage($thumbPath);
+    }
+
+    private function showImage($path)
+    {
+        header("Content-Length: " . filesize($path));
+        $fp = fopen($path, 'rb');
+        fpassthru($fp);
+        exit;
     }
 }

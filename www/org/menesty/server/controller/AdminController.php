@@ -78,6 +78,15 @@ class AdminController extends AbstractAdminController
 
             $items = $categoryService->getAdminCategories(Language::getActiveLanguage(), Language::getSupported(), $id);
 
+            $template->setParam("activeCategoryName", "");
+
+            if (!is_null($id)) {
+                $activeCategory = $categoryService->getById(Language::getActiveLanguage(), $id);
+                $template->setParam("activeCategoryName", $activeCategory->getName());
+            }
+
+
+            $template->setParam("activeCategoryId", $id);
             $template->setParam("categories", $categories);
             $template->setParam("items", $items);
             $template->setParam("parent_id", $id);

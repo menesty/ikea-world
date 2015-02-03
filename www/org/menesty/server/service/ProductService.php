@@ -32,6 +32,12 @@ class ProductService extends AbstractService
         `instruction_$lang` = :instruction, `price` = :price where art_number = :art_number");
         }
 
+
+        if(is_null($product->getArtNumber())) {
+            var_dump($params);
+            die();
+        }
+
         $st->execute($params);
 
     }
@@ -71,13 +77,13 @@ class ProductService extends AbstractService
         $condition = "";
         if (!is_null($categoryId)) {
             $join = " left join `product_category` on (`id` = `product_id`)";
-            $condition = " where category_id = :categoryId";
+            $condition = " and category_id = :categoryId";
         }
 
         $connection = Database::get()->getConnection();
         $st = $connection->prepare("SELECT `id`, `art_number`, `title_$lang` as `title`, `short_description_$lang` as `short_description`,
                                     `designer`, `size_$lang` as `size`, `packing_$lang` as `packing`, `instruction_$lang` as `instruction`,
-                                    `price`, `published`, `available` from `products` " . $join . $condition . " LIMIT :limit OFFSET :offset");
+                                    `price`, `published`, `available` from `products` " . $join .' where published=1 '. $condition . " LIMIT :limit OFFSET :offset");
         $st->setFetchMode(PDO::FETCH_ASSOC);
         $st->bindValue(':limit', $limit, PDO::PARAM_INT);
         $st->bindValue(':offset', $offset, PDO::PARAM_INT);
@@ -99,7 +105,7 @@ class ProductService extends AbstractService
         $connection = Database::get()->getConnection();
         $st = $connection->prepare("SELECT `id`, `art_number`, `title_$lang` as `title`, `short_description_$lang` as `short_description`,
                                     `designer`, `size_$lang` as `size`, `packing_$lang` as `packing`, `instruction_$lang` as `instruction`,
-                                    `price`, `published`, `available` from `products` " . $where[0] . " LIMIT :limit OFFSET :offset");
+                                    `price`, `published`, `available` from `products` " . $where[0] . " and published=1 LIMIT :limit OFFSET :offset");
         $st->setFetchMode(PDO::FETCH_ASSOC);
 
         $st->bindValue(':limit', $limit, PDO::PARAM_INT);
@@ -183,12 +189,12 @@ class ProductService extends AbstractService
         $params = array();
         if (!is_null($categoryId)) {
             $join = " left join `product_category` on (`id` = `product_id`)";
-            $condition = " where category_id = :categoryId";
+            $condition = " and category_id = :categoryId";
             $params["categoryId"] = $categoryId;
         }
 
         $connection = Database::get()->getConnection();
-        $st = $connection->prepare('SELECT count(id) from `products`' . $join . $condition);
+        $st = $connection->prepare('SELECT count(id) from `products`' . $join . ' where `published` = 1 '.$condition);
         $st->setFetchMode(PDO::FETCH_NUM);
         $st->execute($params);
         $result = $st->fetch();

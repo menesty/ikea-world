@@ -78,5 +78,9 @@ class Category {
         $this->parentId = $parentId;
     }
 
+    public function hasCategories(){
+        return sizeof($this->subCategories) != 0;
+    }
+
 
 }
