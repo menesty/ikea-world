@@ -25,7 +25,7 @@ class CatalogController extends AbstractController
      */
     public function defaultAction($categoryId = "")
     {
-        $activeCategory = $this->categoryService->getByName(Language::getActiveLanguage(), $categoryId);
+        $activeCategory = $this->categoryService->getById(Language::getActiveLanguage(), $categoryId);
         $activeCategoryId = !is_null($activeCategory) ? $activeCategory->getId() : null;
 
         $context = $this->getPageContextPath();

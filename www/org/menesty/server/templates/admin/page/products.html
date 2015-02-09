@@ -19,6 +19,7 @@
 
                     <th>Title</th>
                     <th>Short description</th>
+                    <th>Description</th>
                     <th>Size</th>
                     <th>Packing</th>
                     <th>Instruction</th>
@@ -59,7 +60,7 @@
                     </td>
                     <td>
                         <? foreach(Language::getSupported() as $lang) { ?>
-                        <div class="col-sm-7 col-lg-9"><?=$lang;?></div>
+                        <div class="col-sm-7 col-lg-8"><?=$lang;?></div>
                         <div class="col-sm-4 col-lg-2">
                             <? if($product['title_'.$lang]) { ?>
                             <i class="fa fa-check available"></i>
@@ -71,7 +72,7 @@
                     </td>
                     <td>
                         <? foreach(Language::getSupported() as $lang) { ?>
-                        <div class="col-sm-7 col-lg-9"><?=$lang;?></div>
+                        <div class="col-sm-7 col-lg-8"><?=$lang;?></div>
                         <div class="col-sm-4 col-lg-2">
                             <? if($product['short_description_'.$lang]) { ?>
                             <i class="fa fa-check available"></i>
@@ -82,8 +83,21 @@
                         <?}?>
                     </td>
                     <td>
+
                         <? foreach(Language::getSupported() as $lang) { ?>
-                        <div class="col-sm-7 col-lg-9"><?=$lang;?></div>
+                        <div class="col-sm-7 col-lg-8"><?=$lang;?></div>
+                        <div class="col-sm-4 col-lg-2">
+                            <? if($product['description_'.$lang]) { ?>
+                            <i class="fa fa-check available"></i>
+                            <? } else { ?>
+                            <i class="fa fa-minus not-available"></i>
+                            <?}?>
+                        </div>
+                        <?}?>
+                    </td>
+                    <td>
+                        <? foreach(Language::getSupported() as $lang) { ?>
+                        <div class="col-sm-7 col-lg-8"><?=$lang;?></div>
                         <div class="col-sm-4 col-lg-2">
                             <? if($product['size_'.$lang]) { ?>
                             <i class="fa fa-check available"></i>
@@ -95,7 +109,7 @@
                     </td>
                     <td>
                         <? foreach(Language::getSupported() as $lang) { ?>
-                        <div class="col-sm-7 col-lg-9"><?=$lang;?></div>
+                        <div class="col-sm-7 col-lg-8"><?=$lang;?></div>
                         <div class="col-sm-4 col-lg-2">
                             <? if($product['packing_'.$lang]) { ?>
                             <i class="fa fa-check available"></i>
@@ -107,7 +121,7 @@
                     </td>
                     <td>
                         <? foreach(Language::getSupported() as $lang) { ?>
-                        <div class="col-sm-7 col-lg-9"><?=$lang;?></div>
+                        <div class="col-sm-7 col-lg-8"><?=$lang;?></div>
                         <div class="col-sm-4 col-lg-2">
                             <? if($product['instruction_'.$lang]) { ?>
                             <i class="fa fa-check available"></i>

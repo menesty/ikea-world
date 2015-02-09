@@ -25,6 +25,10 @@ class ContactRequestService extends AbstractService
         return $contactRequest->getId();
     }
 
+    public function getList() {
+
+    }
+
     protected function newInstance()
     {
         return new ContactRequest();

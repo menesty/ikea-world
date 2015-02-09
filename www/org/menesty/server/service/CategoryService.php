@@ -85,16 +85,6 @@ class CategoryService extends AbstractService
         return $this->transform($st->fetchAll());
     }
 
-    public function getByName($lang, $name)
-    {
-        $connection = Database::get()->getConnection();
-        $st = $connection->prepare("SELECT `id`, `name_$lang` as `name` from `categories` where name_$lang = :name");
-
-        $st->setFetchMode(PDO::FETCH_ASSOC);
-        $st->execute(array("name" => $name));
-        return $this->transformRow($st->fetch());
-    }
-
     protected function newInstance()
     {
         return new Category();

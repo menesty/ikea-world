@@ -6,6 +6,7 @@ $digestAuthentication->auth();
 include_once(Configuration::get()->getClassPath() . "AbstractAdminController.php");
 include_once(Configuration::get()->getClassPath() . "service" . DIRECTORY_SEPARATOR . "PageContentService.php");
 include_once(Configuration::get()->getClassPath() . "service" . DIRECTORY_SEPARATOR . "CategoryService.php");
+include_once(Configuration::get()->getClassPath() . "service" . DIRECTORY_SEPARATOR . "ContactRequestService.php");
 
 
 /**
@@ -171,6 +172,12 @@ class AdminController extends AbstractAdminController
         $mainTemplate->setParam("main_content", $template);
 
         return $mainTemplate;
+    }
+
+    public function contactRequest()
+    {
+        $contactRequestService = new ContactRequestService();
+
     }
 
 } 

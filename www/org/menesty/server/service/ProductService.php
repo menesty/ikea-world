@@ -9,7 +9,7 @@ include_once(Configuration::get()->getClassPath() . "service" . DIRECTORY_SEPARA
  */
 class ProductService extends AbstractService
 {
-    private $translatedFields = array("title", "short_description", "size", "packing", "instruction");
+    private $translatedFields = array("title", "short_description", "size", "packing", "instruction", "description");
 
     public function save($lang, Product $product)
     {
@@ -18,22 +18,22 @@ class ProductService extends AbstractService
         $params = array("art_number" => $product->getArtNumber(), "title" => $product->getTitle(),
             "short_description" => $product->getShortDescription(), "designer" => $product->getDesigner(),
             "size" => $product->getSize(), "packing" => $product->getPacking(), "description" => $product->getDescription(),
-            "instruction" => $product->getInstruction(), "price" => $product->getPrice()
+            "instruction" => $product->getInstruction()
         );
 
         if (is_null($this->getProductByArtNumber($lang, $product->getArtNumber()))) {
             $st = $connection->prepare("INSERT INTO `products` (`art_number`,`title_$lang`,`short_description_$lang`, `designer`,
-        `size_$lang`, `packing_$lang`, `description_$lang`, `instruction_$lang`,`price`)
+        `size_$lang`, `packing_$lang`, `description_$lang`, `instruction_$lang`)
         VALUES (:art_number, :title, :short_description, :designer, :size, :packing, :description, :instruction
-        , :price)");
+        )");
         } else {
             $st = $connection->prepare("UPDATE `products` set `title_$lang` = :title, `short_description_$lang` = :short_description,
         `designer` = :designer, `size_$lang` = :size, `packing_$lang` = :packing, `description_$lang` = :description,
-        `instruction_$lang` = :instruction, `price` = :price where art_number = :art_number");
+        `instruction_$lang` = :instruction where art_number = :art_number");
         }
 
 
-        if(is_null($product->getArtNumber())) {
+        if (is_null($product->getArtNumber())) {
             var_dump($params);
             die();
         }
@@ -83,7 +83,7 @@ class ProductService extends AbstractService
         $connection = Database::get()->getConnection();
         $st = $connection->prepare("SELECT `id`, `art_number`, `title_$lang` as `title`, `short_description_$lang` as `short_description`,
                                     `designer`, `size_$lang` as `size`, `packing_$lang` as `packing`, `instruction_$lang` as `instruction`,
-                                    `price`, `published`, `available` from `products` " . $join .' where published=1 '. $condition . " LIMIT :limit OFFSET :offset");
+                                    `price`, `published`, `available` from `products` " . $join . ' where published=1 ' . $condition . " LIMIT :limit OFFSET :offset");
         $st->setFetchMode(PDO::FETCH_ASSOC);
         $st->bindValue(':limit', $limit, PDO::PARAM_INT);
         $st->bindValue(':offset', $offset, PDO::PARAM_INT);
@@ -157,7 +157,7 @@ class ProductService extends AbstractService
 
     public function getAdminRange($languages, $offset, $limit)
     {
-        $columns = array("title", "short_description", "size", "packing", "instruction");
+        $columns = array("title", "short_description","description", "size", "packing", "instruction");
 
         $query = "SELECT `id`, `art_number`, `price`, `published`, `available`, " . $this->getBooleanConditionByField("designer")
             . "," . $this->createLangAdminQueryCheck($languages, $columns) . " from `products` LIMIT :limit OFFSET :offset";
@@ -194,7 +194,7 @@ class ProductService extends AbstractService
         }
 
         $connection = Database::get()->getConnection();
-        $st = $connection->prepare('SELECT count(id) from `products`' . $join . ' where `published` = 1 '.$condition);
+        $st = $connection->prepare('SELECT count(id) from `products`' . $join . ' where `published` = 1 ' . $condition);
         $st->setFetchMode(PDO::FETCH_NUM);
         $st->execute($params);
         $result = $st->fetch();
@@ -345,6 +345,29 @@ class ProductService extends AbstractService
 
     }
 
+    public function assignCategories($productId, array $categoriesIds)
+    {
+        $connection = Database::get()->getConnection();
 
+        $this->clearCategories($productId);
+
+        $st = $connection->prepare("INSERT INTO `product_category` (`product_id`, `category_id`) VALUES (:productId, :categoryId)");
+
+        foreach ($categoriesIds as $category) {
+            $st->execute(array("productId" => $productId, "categoryId" => $category));
+        }
+    }
+
+
+    public function getNotCategorized()
+    {
+        $query = "select `products`.`id`, `products`.`art_number` from `products` left join `product_category` on (`id` = `product_id`) where `product_id` is NULL";
+        $connection = Database::get()->getConnection();
+        $st = $connection->prepare($query);
+        $st->setFetchMode(PDO::FETCH_ASSOC);
+        $st->execute();
+
+        return $st->fetchAll();
+    }
 }
 

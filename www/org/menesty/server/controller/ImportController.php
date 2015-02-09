@@ -20,7 +20,7 @@ class ImportController
         $path = Configuration::get()->getClassPath() . "data" . DIRECTORY_SEPARATOR;
         $productService = new ProductService();
 
-        $folders = array("ru");
+        $folders = array("by");
 
         foreach ($folders as $folder) {
             $ss = $path . DIRECTORY_SEPARATOR . $folder;
@@ -29,7 +29,7 @@ class ImportController
                 if ($fileInfo->isDot()) continue;
 
                 $product = $this->getContent($fileInfo);
-                $productService->save("ru", $product);
+                $productService->save("by", $product);
             }
         }
     }
@@ -144,7 +144,15 @@ class ImportController
         echo $fileInfo->getFilename() . "<br/>";
 
         $fieldArray = array("art." => "artNumber", "title" => "title", "description" => "shortDescription",
-            "дизайнер" => "designer", "Дизайнер" => "designer", "Размеры и характеристика товара:" => "size", "Характеристика упаковки:" => "packing",
+            "дизайнер" => "designer", "Дизайнер" => "designer", "Дызайнер" => "designer", "Дызайнер:" => "designer",
+            "Размеры и характеристика товара:" => "size",
+            "Характеристика упаковки:" => "packing","Характарыстыка пакавання:"=> "packing",
+            "Апісанне:"=>"description","Апысанне:"=>"description",
+            "Памер і характарыстыка тавару:"=>"size",
+            "Памеры і характарыстыка тавару:"=>"size","Памеры і характарыстыка"=>"size",
+            "Памеры і характарыстыка пакавання:"=>"size","Харатарстыка пакавання:"=>"packing",
+            "Характарстыка пакавання:"=>"packing","Характарыстыка ўпакоўкі:" => "packing",
+            "Памер і характарстыка тавару:"=>"size","Інструкцыя па догляду:"=>"instruction",
             "Описание:" => "description", "Инструкция по уходу:" => "instruction", "Размеры и характеристика товару:" => "size");
 
         $activeField = null;
@@ -230,7 +238,6 @@ class ImportController
 
         $http_code = curl_getinfo($ch);
 
-
         if ($http_code["http_code"] == "200") {
             return $result;
         }
@@ -238,11 +245,61 @@ class ImportController
         return false;
     }
 
-    public function test()
+    public function sortProducts()
     {
-        if (strpos("asda JFIF", 'JFIF') > 0) {
-            var_dump("sss");
-        };
+        $productService = new ProductService();
+        $products = $productService->getNotCategorized();
+        $categoryService = new CategoryService();
+        $categories = $categoryService->getCategoriesTree(Language::getActiveLanguage());
+
+
+        $data = array();
+        foreach ($categories as $category) {
+            foreach ($category->getSubCategories() as $subCategory) {
+                foreach ($subCategory->getSubCategories() as $dno) {
+                    $data[$dno->getId()] = array("name" => $dno->getName(), "parent" => array("id" => $subCategory->getId(), "name" => $subCategory->getName(),
+                        "parent" => array("id" => $category->getId(), "name" => $category->getName())));
+                }
+            }
+        }
+
+        $lines = file(Configuration::get()->getDataPath() . "test_output.txt");
+        $content = "";
+        $i=0;
+        foreach ($lines as $line) {
+            $parts = preg_split("/##/", $line);
+            $found = false;
+            foreach ($data as $key => $value) {
+                $index = 1;
+                if(sizeof($parts) > 4) {
+                    $index = 2;
+                }
+
+                if (trim($value["name"]) == trim($parts[$index]) && trim($value["parent"]["name"]) == trim($parts[$index+1]) && trim($value["parent"]["parent"]["name"]) == trim($parts[$index+2])) {
+                        $i++;
+                        echo "found $i: " . $line . "<br />";
+                    $found = true;
+
+                    $productId = $parts[0];
+                    $categoriesId = array($key, $value["parent"]["id"], $value["parent"]["parent"]["id"]);
+
+                    $productService->assignCategories($productId, $categoriesId);
+                    break;
+                }
+            }
+
+            if(!$found) {
+                $content .= $line;
+            }
+
+        }
+
+        file_put_contents(Configuration::get()->getDataPath() . "not_sorted.txt", $content);
+    }
+
+    public function info()
+    {
+        echo getPreparedArtNumber("S09874436");
     }
 }
 
