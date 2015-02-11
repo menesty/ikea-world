@@ -8,7 +8,7 @@
 class Language
 {
     private static $activeLanguage;
-    private static $supported = array("ru", "by");
+    private static $supported = array("ru", "by", "ua");
 
     private static $defaultLanguage = "ru";
     private static $languageMessages;

@@ -11,39 +11,23 @@ class CategoryService extends AbstractService
     public function getCategories($lang, $active = null)
     {
         $connection = Database::get()->getConnection();
-        $st = $connection->prepare("SELECT `id`, `name_$lang` as `name` from `categories` where parent_id IS NULL");
+        $st = $connection->prepare("SELECT `id`, `name_$lang` as `name`, `product_count` as productCount from `categories` " .
+            "left join (select `category_id`, count(`category_id`) as `product_count` from  `product_category` group by `category_id`) product_category on (`id` = `category_id`) " .
+            "where parent_id IS NULL");
 
         $st->setFetchMode(PDO::FETCH_ASSOC);
         $st->execute();
         $result = $this->transform($st->fetchAll());
 
         if (!is_null($active)) {
-            $id = is_object($active) ? $active->getId() : $active;
-            $previous = null;
+            $parents = $this->getParents($lang, $active);
 
-            while (!is_null($id)) {
-                $item = $this->getById($lang, $id);
-                $item->setSubCategories($this->getChilds($lang, $id));
-
-                if (!is_null($previous)) {
-                    foreach ($item->getSubCategories() as $subItem) {
-                        if ($subItem->getId() == $previous->getId()) {
-                            $subItem->setSubCategories($previous->getSubCategories());
-                        }
+            if (sizeof($parents) > 0) {
+                $values = $this->getChilds($lang, $parents[0]->getId());
+                foreach ($result as $rItem) {
+                    if ($rItem->getId() == $parents[0]->getId()) {
+                        $rItem->setSubCategories($values);
                     }
-                }
-
-                if (is_null($item->getParentId())) {
-                    foreach ($result as $rItem) {
-                        if ($rItem->getId() == $item->getId()) {
-                            $rItem->setSubCategories($item->getSubCategories());
-                        }
-                    }
-                    $id = null;
-                } else {
-
-                    $previous = $item;
-                    $id = $item->getParentId();
                 }
             }
         }
@@ -59,7 +43,7 @@ class CategoryService extends AbstractService
         return $roots;
     }
 
-    private function populateSubItems($lang, &$items)
+    public function populateSubItems($lang, &$items)
     {
         foreach ($items as $item) {
             $child = $this->getChilds($lang, $item->getId());
@@ -68,10 +52,12 @@ class CategoryService extends AbstractService
         }
     }
 
-    private function getChilds($lang, $id, $exclude = null)
+    public function getChilds($lang, $id, $exclude = null)
     {
         $connection = Database::get()->getConnection();
-        $query = "SELECT `id`, `name_$lang` as `name` from `categories` where parent_id=:id";
+        $query = "SELECT `id`, `name_$lang` as `name` , `product_count` as productCount from `categories`" .
+            "left join (select `category_id`, count(`category_id`) as `product_count` from  `product_category` group by `category_id`) product_category on (`id` = `category_id`) " .
+            " where parent_id=:id";
         $params = array("id" => $id);
 
         if (!is_null($exclude)) {
@@ -232,6 +218,22 @@ class CategoryService extends AbstractService
         return $result;
     }
 
+    public function getParents($lang, Category $category)
+    {
+        if (is_null($category)) {
+            return array();
+        }
+
+        $result = array($category);
+
+        while (!is_null($category->getParentId())) {
+            $category = $this->getById($lang, $category->getParentId());
+            $result[] = $category;
+        }
+
+        return array_reverse($result);
+    }
+
     private static function getParentId($id)
     {
         $connection = Database::get()->getConnection();
@@ -242,4 +244,6 @@ class CategoryService extends AbstractService
 
         return $result['parent_id'];
     }
+
+
 } 

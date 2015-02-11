@@ -1,11 +1,12 @@
 <?php
+
 /**
  * User: Menesty
  * Date: 1/2/15
  * Time: 23:01
  */
-
-class Category {
+class Category
+{
     private $id;
 
     private $name;
@@ -13,6 +14,25 @@ class Category {
     private $subCategories;
 
     private $parentId;
+
+    private $productCount = 0;
+
+    /**
+     * @return mixed
+     */
+    public function getProductCount()
+    {
+        return (int)$this->productCount;
+    }
+
+    /**
+     * @param mixed $productCount
+     */
+    public function setProductCount($productCount)
+    {
+        $this->productCount = $productCount;
+    }
+
 
     /**
      * @return mixed
@@ -78,7 +98,8 @@ class Category {
         $this->parentId = $parentId;
     }
 
-    public function hasCategories(){
+    public function hasCategories()
+    {
         return sizeof($this->subCategories) != 0;
     }
 

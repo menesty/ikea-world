@@ -6,17 +6,17 @@
     </div>
     <div class="list-group list-categ">
         <? foreach($this->params["categories"] as $category) { ?>
-        <a href="<?=$contextUrl.$category->getId();?>" class="list-group-item"><?=$category->getName();?></a>
+        <a href="<?=$contextUrl.$category->getId();?>" class="list-group-item"><?=$category->getName().' ('.$category->getProductCount().')';?></a>
 
             <? if(!is_null($category->getSubCategories())) { ?>
             <div class="level_2">
                 <? foreach($category->getSubCategories() as $subCategory) {?>
-                <a href="<?=$contextUrl.$subCategory->getId();?>" class="list-group-item"><?=$subCategory->getName();?></a>
+                <a href="<?=$contextUrl.$subCategory->getId();?>" class="list-group-item"><?=$subCategory->getName().' ('.$subCategory->getProductCount().')';?></a>
 
                 <? if(!is_null($subCategory->getSubCategories())) { ?>
                 <div class="level_3">
                     <? foreach($subCategory->getSubCategories() as $subSubCategory) {?>
-                    <a href="<?=$contextUrl.$subSubCategory->getId();?>" class="list-group-item"><?=$subSubCategory->getName();?></a>
+                    <a href="<?=$contextUrl.$subSubCategory->getId();?>" class="list-group-item"><?=$subSubCategory->getName().' ('.$subSubCategory->getProductCount().')';?></a>
                     <?};?>
                 </div>
                 <?};};?>

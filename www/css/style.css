@@ -348,3 +348,32 @@ footer .copyright{
 .recent-product .prod-caption h4 {
     height: auto;
 }
+
+
+
+.navigation ul li {
+    border: 0px;
+}
+.navigation ul {
+    border: 1px solid #DDD;
+}
+.navigation ul.list-categories li.active_category {
+    background-color: #F56426;
+}
+
+.navigation ul.level-2 li.active_category a {
+    color: #F56426;
+    font-weight: bold;
+}
+.navigation ul.level-2{
+    margin-bottom: 0px;
+    border-bottom: 0px;
+
+}
+.navigation ul.level-2 li, .navigation ul.level-2{
+    background: none repeat scroll 0% 0% #FBFBFB
+}
+
+.navigation ul.list-categories li.active_category a {
+    color: #ffffff;
+}

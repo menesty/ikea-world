@@ -37,6 +37,30 @@ class CatalogController extends AbstractController
         $activePage = $this->getInt("page", 1, 1, $pageCount);
         $offset = ($activePage - 1) * self::ITEM_PER_PAGE;
 
+        $listCategories = array();
+        $lastCategories = array();
+        $parentsCategories = array();
+        if (!is_null($activeCategory)) {
+            $parentsCategories = $this->categoryService->getParents(Language::getActiveLanguage(), $activeCategory);
+
+            if (sizeof($parentsCategories) > 1) {
+                /*
+                 * [current] 2
+                 * [parent ] 1
+                 */
+                $listCategories = $this->categoryService->getChilds(Language::getActiveLanguage(), $parentsCategories[1]->getId());
+
+                if (sizeof($parentsCategories) > 2) {
+                    $lastCategories = $this->categoryService->getChilds(Language::getActiveLanguage(), $parentsCategories[2]->getId());
+                }
+
+
+            }
+        }
+
+        $template->setParam("parents_categories", $parentsCategories);
+        $template->setParam("list_categories", $listCategories);
+        $template->setParam("last_list_categories", $lastCategories);
         $template->setParam("products", $this->productService->getPublishedRange(Language::getActiveLanguage(),
             $activeCategoryId, $offset, self::ITEM_PER_PAGE));
 
