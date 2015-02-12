@@ -8,33 +8,49 @@
             <div class="widget-content nopadding">
                 <div class="list-group list-categ">
                     <? foreach($this->params["categories"] as $category) { ?>
-                    <a href="/admin/categories/view/<?=$category->getId();?>" class="list-group-item"><?=$category->
-                        getName();?></a>
+                    <a href="/admin/categories/view/<?=$category->getId();?>" class="list-group-item">
+                        <?=$category->getName();?></a>
 
                     <? if(!is_null($category->getSubCategories())) { ?>
-                    <div class="level-2" id="sub_category_<?=$category->getId();?>">
+                    <div class="sub-list" id="sub-list_<?=$category->getId();?>">
                         <? foreach($category->getSubCategories() as $subCategory) {?>
                         <div class="row">
-                            <span class="col-xs-1 col-sm-1 col-lg-1 <?=$subCategory->hasCategories()?'allow-collapse':'';?>"
+                            <span class="col-xs-1 col-sm-1 col-lg-1 text-right <?=$subCategory->hasCategories()?'allow-collapse':'';?>"
                                   data-category-id="<?=$subCategory->getId();?>"></span>
                             <a href="/admin/categories/view/<?=$subCategory->getId();?>"
                                class="list-group-item col-xs-11 col-sm-11 col-lg-11"
                                id="sub_category_item_<?=$subCategory->getId();?>"><?=$subCategory->getName();?></a>
                         </div>
                         <? if(!is_null($subCategory->getSubCategories())) { ?>
-                        <div class="level-3" id="sub_sub_category_<?=$subCategory->getId();?>">
+                        <div class="sub-list" id="sub-list_<?=$subCategory->getId();?>">
                             <? foreach($subCategory->getSubCategories() as $subSubCategory) {?>
                             <div class="row">
-                                <span class="col-xs-2 col-sm-2 col-lg-2"></span>
-                                <span class="list-group-item col-xs-10 col-sm-10 col-lg-10"><?=$subSubCategory->
-                                    getName();?></span>
+                                <span class="col-xs-2 col-sm-2 col-lg-2 text-right <?=$subSubCategory->hasCategories()?'allow-collapse':'';?>"
+                                      data-category-id="<?=$subSubCategory->getId();?>"></span>
+                                <a href="/admin/categories/view/<?=$subSubCategory->getId();?>"
+                                   class="list-group-item col-xs-10 col-sm-10 col-lg-10"
+                                   id="sub_sub_category_item_<?=$subSubCategory->getId();?>">
+                                    <?=$subSubCategory->getName();?></a>
                             </div>
+                            <? if(!is_null($subSubCategory->getSubCategories())) { ?>
+                            <div class="sub-list" id="sub-list_<?=$subSubCategory->getId();?>">
+                                <? foreach($subSubCategory->getSubCategories() as $subSubSubCategory) {?>
+                                <div class="row">
+                                    <span class="col-xs-3 col-sm-3 col-lg-3"></span>
+                                <span class="list-group-item col-xs-9 col-sm-9 col-lg-9">
+                                    <?=$subSubSubCategory->getName();?></span>
+                                </div>
+
+                                <?};?>
+                            </div>
+                            <?};?>
+
+
                             <?};?>
                         </div>
                         <?};};?>
                     </div>
-                    <?};
-                    };?>
+                    <?};};?>
 
                 </div>
 
@@ -101,24 +117,23 @@
 <script>
     var active_category = '<?=$this->getParam("activeCategoryId")?>';
     $(function () {
-        $('.level-2, .level-3').each(function (index, el) {
+        $('.sub-list').each(function (index, el) {
             $(el).hide();
         });
 
-        var scrollElement = '';
-        if ($('#sub_category_' + active_category).length > 0) {
-            $('#sub_category_' + active_category).show();
-            scrollElement = '#sub_category_' + active_category;
-        } else if ($('#sub_category_item_' + active_category).length > 0) {
-            $('#sub_category_item_' + active_category).parent().parent().show();
-            $('#sub_sub_category_' + active_category).show();
-            scrollElement = '#sub_category_item_' + active_category;
-        }
+        var el = $('#sub-list_' + active_category);
+        do {
+            if (el.length > 0 && el.hasClass("sub-list")) {
+                el.show();
+            }
+
+        } while (!(el = el.parent()).hasClass("list-categ"));
+
 
         $('.allow-collapse').each(function (i, el) {
             var id = $(this).data("category-id");
 
-            if ($('#sub_sub_category_' + id).is(':visible')) {
+            if ($('#sub-list_' + id).is(':visible')) {
                 $(el).html("-");
             } else {
                 $(el).html("+");
@@ -129,18 +144,18 @@
                 var value = $(this).html();
                 var id = $(this).data("category-id");
 
-                if ($('#sub_sub_category_' + id).is(':visible')) {
-                    $('#sub_sub_category_' + id).hide();
+                if ($('#sub-list_' + id).is(':visible')) {
+                    $('#sub-list_' + id).hide();
                     $(this).html("+");
                 } else {
-                    $('#sub_sub_category_' + id).show();
+                    $('#sub-list_' + id).show();
                     $(this).html("-");
                 }
             });
         });
 
         $('html, body').animate({
-            scrollTop: $('.buttons .fa-plus').offset().top-30
+            scrollTop: $('.buttons .fa-plus').offset().top - 30
         });
     });
 </script>

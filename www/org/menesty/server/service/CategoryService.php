@@ -164,29 +164,16 @@ class CategoryService extends AbstractService
         return $data["parent_id"];
     }
 
-    public function isThirdLevel($id)
+    public function isFourthLevel($id)
     {
+
         if (is_null($id)) {
             return false;
         }
 
-        $connection = Database::get()->getConnection();
-        $activeId = $id;
-        $st = $connection->prepare("SELECT `parent_id` from `categories` where `id` = :id");
-        $st->setFetchMode(PDO::FETCH_ASSOC);
+        $result = $this->getParentIds($id);
 
-        for ($lvl = 0; $lvl < 2; $lvl++) {
-            $st->execute(array("id" => $activeId));
-            if ($result = $st->fetch()) {
-                if (is_null($result["parent_id"])) {
-                    return false;
-                } else {
-                    $activeId = $result["parent_id"];
-                }
-            }
-        }
-
-        return true;
+        return sizeof($result) > 3;
     }
 
     /**

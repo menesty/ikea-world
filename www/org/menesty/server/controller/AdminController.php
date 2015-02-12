@@ -92,13 +92,13 @@ class AdminController extends AbstractAdminController
             $template->setParam("items", $items);
             $template->setParam("parent_id", $id);
 
-            $template->setParam("allowSubCategories", !$categoryService->isThirdLevel($id));
+            $template->setParam("allowSubCategories", !$categoryService->isFourthLevel($id));
         } elseif ($action == "edit" && $categoryService->isValid($id)) {
             $template = new Template("admin/page/category_edit.html");
             $model = $categoryService->getAdminCategory($id);
             $template->setParam("model", $model);
         } elseif ($action == "add" && ((!is_null($id) && $categoryService->isValid($id)) || is_null($id))) {
-            if ($categoryService->isThirdLevel($id)) {
+            if ($categoryService->isFourthLevel($id)) {
                 return new Redirect("/admin/categories/view/" . id);
             }
 
@@ -108,7 +108,7 @@ class AdminController extends AbstractAdminController
         } elseif ($action == "update" && $this->isPost()) {
             $postData = $this->getPost();
 
-            if ($categoryService->isThirdLevel($postData["parent_id"])) {
+            if ($categoryService->isFourthLevel($postData["parent_id"])) {
                 return new Redirect("/admin/categories/view/" . id);
             }
 

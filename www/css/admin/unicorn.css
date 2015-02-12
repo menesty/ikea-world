@@ -5878,19 +5878,11 @@ body[data-color="purple"].flat .ui-dialog .ui-dialog-titlebar {
 }
 
 
-.level-3 > div, .level-2 > div, .level-1 > div {
+.sub-list > div {
     margin-bottom: -1px;
 }
 
-.level-2 a {
-    padding-left: 10px;
-}
-
-.level-3 span {
-    padding-left: 10px;
-}
-
-.level-2 a, .level-3 span {
+.sub-list span {
     padding-bottom: 5px;
     padding-top: 5px;
     border-top: 0px;
@@ -5907,7 +5899,7 @@ body[data-color="purple"].flat .ui-dialog .ui-dialog-titlebar {
     border-top: 0px;
 }
 
-.widget-box .level-2 .list-group-item:last-child {
+.widget-box .sub-list .list-group-item:last-child {
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
     border-bottom: 0px;
