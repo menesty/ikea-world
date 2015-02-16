@@ -71,11 +71,13 @@ class AdminController extends AbstractAdminController
 
         if ($action == "view") {
             $template = new Template("admin/page/categories.html");
-            $categories = $categoryService->getCategoriesTree(Language::getActiveLanguage());
+
 
             if (!is_null($id) && !$categoryService->isValid($id)) {
                 return new Redirect("/admin/categories");
             }
+
+            $categories = $categoryService->getCategoriesTree(Language::getActiveLanguage(), $id);
 
             $items = $categoryService->getAdminCategories(Language::getActiveLanguage(), Language::getSupported(), $id);
 
@@ -138,21 +140,19 @@ class AdminController extends AbstractAdminController
         if ($action == "view") {
             $template = new Template("admin/page/products.html");
 
-            $itemsCount = $this->productService->getCount();
+            $itemsCount = $this->productService->getCount($this->getGet());
             $pageCount = ceil($itemsCount / self::ITEM_PER_PAGE);
             $activePage = $this->getInt("page", 1, 1, $pageCount);
 
             $template->setParam("products", $this->productService->getAdminRange(Language::getSupported(),
-                ($activePage - 1) * self::ITEM_PER_PAGE, self::ITEM_PER_PAGE));
+                ($activePage - 1) * self::ITEM_PER_PAGE, self::ITEM_PER_PAGE, $this->getGet()));
 
             $template->setParam("pageCount", $pageCount);
             $template->setParam("activePage", $activePage);
+            $template->setParam("paramBuilder", new ParamBuilder($this->getGet()));
 
         } elseif ($action == "edit" || $action == "add") {
             $template = new Template("admin/page/product_edit.html");
-            $categoryService = new CategoryService();
-            $template->setParam("categories", $categoryService->getCategoriesTree(Language::getActiveLanguage()));
-            $template->setParam("activeCategories", $this->productService->getProductCategories($id));
 
             if (!is_null($id)) {
                 $template->setParam("model", $this->productService->getAdminProduct($id));
@@ -180,4 +180,47 @@ class AdminController extends AbstractAdminController
 
     }
 
-} 
+}
+
+class ParamBuilder
+{
+    private $baseParams;
+
+    public function __construct(array $params)
+    {
+        unset($params["route"]);
+        $this->baseParams = $params;
+    }
+
+    public function get($key)
+    {
+        if (isset($this->baseParams[$key])) {
+            return $this->baseParams[$key];
+        }
+
+        return "";
+    }
+
+    public function create()
+    {
+        $iterator = new ArrayIterator($this->baseParams);
+        return new ParamBuilder($iterator->getArrayCopy());
+    }
+
+    public function append($key, $value)
+    {
+        $this->baseParams[$key] = $value;
+        return $this;
+    }
+
+    public function toParams()
+    {
+        $query = "?";
+
+        foreach ($this->baseParams as $key => $value) {
+            $query .= urldecode($key) . "=" . urlencode($value) . "&";
+        }
+
+        return rtrim($query, "&");
+    }
+}

@@ -33,24 +33,6 @@
                     </div>
                 </div>
 
-                <? $activeCategories = $this->getParam('activeCategories');?>
-                <div class="form-group">
-                    <label class="col-sm-3 col-md-3 col-lg-2 control-label">Category</label>
-                    <div class="col-sm-9 col-md-9 col-lg-10">
-                        <select name="category">
-                            <option></option>
-                            <? foreach($this->getParam('categories') as $category) {?>
-                            <optgroup label="<?=$category->getName();?>"></optgroup>
-                                <? foreach($category->getSubCategories() as $subCategory) {?>
-                                    <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$subCategory->getName();?>"></optgroup>
-                                    <? foreach($subCategory->getSubCategories() as $subSubCategory) {?>
-                                    <option value="<?=$subSubCategory->getId();?>" <?=in_array($subSubCategory->getId(),$activeCategories)?'selected': '';?>>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$subSubCategory->getName();?></option>
-                                <? }}};?>
-                        </select>
-                    </div>
-                </div>
-
 <?
 
  $fields = array("title" => "input", "short_description" => "text", "description" => "textarea", "size" => "textarea", "packing" => "textarea", "instruction"=>"textarea");

@@ -17,6 +17,25 @@ class Category
 
     private $productCount = 0;
 
+    private $ikeaUrl;
+
+    /**
+     * @return mixed
+     */
+    public function getIkeaUrl()
+    {
+        return $this->ikeaUrl;
+    }
+
+    /**
+     * @param mixed $ikeaUrl
+     */
+    public function setIkeaUrl($ikeaUrl)
+    {
+        $this->ikeaUrl = $ikeaUrl;
+    }
+
+
     /**
      * @return mixed
      */

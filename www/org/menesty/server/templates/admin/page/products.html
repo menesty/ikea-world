@@ -1,10 +1,49 @@
+<?
+$pb = $this->getParam("paramBuilder");
+function buildPageUrl($pb, $pageNumber){
+    return $pb->create()->append("page", $pageNumber)->toParams();
+}
+?>
+<style>
+    .icheckbox_flat-blue {
+        display: block;
+    }
+
+</style>
 <div class="col-xs-12">
+    <div class="widget-box">
+        <div class="widget-title">
+            <h5>Filter</h5>
+        </div>
+        <div class="widget-content">
+            <form action="/admin/products" method="GET">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6">
+                            Art Number: <input class="form-control input-sm" type="text" name="artNumber" value="<?=htmlspecialchars($pb->get('artNumber'));?>">
+                        </div>
+                        <div class="col-xs-12 col-sm-3">
+                            Published :<input type="checkbox" class="form-control input-sm" name="published" <?=$pb->get('published')? 'checked':'';?>/>
+                        </div>
+                        <div class="col-xs-12 col-sm-3">
+                            Available :<input type="checkbox" class="form-control input-sm" name="available" <?=$pb->get('available')? 'checked':'';?>/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
     <div class="widget-box">
         <div class="widget-title">
 								<span class="icon">
 									<i class="fa fa-th"></i>
 								</span>
-            <h5>Dynamic table</h5>
+            <h5>Products</h5>
         </div>
         <div class="widget-content nopadding dataTables_wrapper">
 
@@ -142,9 +181,21 @@
 
                 </tbody>
             </table>
+
             <div class="fg-toolbar ui-toolbar ui-widget-header ui-corner-bl ui-corner-br ui-helper-clearfix">
                 <div class="dataTables_paginate fg-buttonset ui-buttonset fg-buttonset-multi ui-buttonset-multi paging_full_numbers">
-                    <a tabindex="0" class="first ui-corner-tl ui-corner-bl fg-button ui-button ui-state-default <?=1==$this->getParam('activePage')?'ui-state-disabled':''?>">First</a><a tabindex="0" class="previous fg-button ui-button ui-state-default <?=1==$this->getParam('activePage')?'ui-state-disabled':''?>">Previous</a><span><? for($i=1; $i<=$this->getParam("pageCount"); $i++) { ?><a tabindex="0" class="fg-button ui-button ui-state-default <?=$i == $this->getParam('activePage')? 'ui-state-disabled' : '';?>" href="/admin/products/?page=<?=$i;?>"><?=$i;?></a><? };?></span><a tabindex="0" class="next fg-button ui-button <?=$this->getParam('pageCount')<=$this->getParam('activePage')?'ui-state-disabled':''?>" href="/admin/products/?page=<?=$this->getParam('activePage')+1;?>">Next</a><a tabindex="0" class="last ui-corner-tr ui-corner-br fg-button ui-button <?=$this->getParam('pageCount')<=$this->getParam('activePage')?'ui-state-disabled':''?>" href="/admin/products/?page=<?=$this->getParam('pageCount');?>">Last</a>
+                    <a tabindex="0" href="/admin/products/<?=buildPageUrl($pb,1);?>"
+                       class="first ui-corner-tl ui-corner-bl fg-button ui-button ui-state-default <?=1==$this->getParam('activePage')?'ui-state-disabled':''?>">First</a><a
+                        tabindex="0" href="/admin/products/<?=buildPageUrl($pb,($this->getParam('activePage')-1));?>"
+                        class="previous fg-button ui-button ui-state-default <?=1==$this->getParam('activePage')?'ui-state-disabled':''?>">Previous</a><span><? for($i=1; $i<=$this->
+                    getParam("pageCount"); $i++) { ?><a tabindex="0"
+                                                        class="fg-button ui-button ui-state-default <?=$i == $this->getParam('activePage')? 'ui-state-disabled' : '';?>"
+                                                        href="/admin/products/<?=buildPageUrl($pb,$i);?>"><?=$i;?></a><? };?></span><a
+                        tabindex="0"
+                        class="next fg-button ui-button <?=$this->getParam('pageCount')<=$this->getParam('activePage')?'ui-state-disabled':''?>"
+                        href="/admin/products/<?=buildPageUrl($pb,($this->getParam('activePage')+1));?>">Next</a><a tabindex="0"
+                                                                                                      class="last ui-corner-tr ui-corner-br fg-button ui-button <?=$this->getParam('pageCount')<=$this->getParam('activePage')?'ui-state-disabled':''?>"
+                                                                                                      href="/admin/products/<?=buildPageUrl($pb,$this->getParam('pageCount'));?>">Last</a>
                 </div>
             </div>
         </div>

@@ -42,6 +42,17 @@ class ProductService extends AbstractService
 
     }
 
+    public function insertGag($artNumber)
+    {
+        $connection = Database::get()->getConnection();
+        $st = $connection->prepare("INSERT INTO `products` (`art_number`,`title_ru`,`short_description_ru`, `designer`,
+        `size_ru`, `packing_ru`, `description_ru`, `instruction_ru`, `available`)
+        VALUES (:art_number, '', '', '', '', '', '', '', 1)");
+        $st->execute(array("art_number" => $artNumber));
+
+        return $connection->lastInsertId();
+    }
+
     public function updatePrice($artNumber, $price)
     {
         $connection = Database::get()->getConnection();
@@ -155,18 +166,48 @@ class ProductService extends AbstractService
         return $result[0];
     }
 
-    public function getAdminRange($languages, $offset, $limit)
+    public function getAdminRange($languages, $offset, $limit, array $queryParams)
     {
-        $columns = array("title", "short_description","description", "size", "packing", "instruction");
+        $params = array();
+        $columns = array("title", "short_description", "description", "size", "packing", "instruction");
 
         $query = "SELECT `id`, `art_number`, `price`, `published`, `available`, " . $this->getBooleanConditionByField("designer")
-            . "," . $this->createLangAdminQueryCheck($languages, $columns) . " from `products` LIMIT :limit OFFSET :offset";
+            . "," . $this->createLangAdminQueryCheck($languages, $columns) . " from `products` ";
+
+        $where = "";
+
+        if (isset($queryParams["artNumber"])) {
+            $where .= " `art_number` LIKE :artNumber and";
+            $params["artNumber"] = "%" . $queryParams["artNumber"] . "%";
+        }
+
+        if (isset($queryParams["published"])) {
+            $where .= " `published`= 1 and";
+        }
+
+        if (isset($queryParams["available"])) {
+            $where .= " `available`= 1 and";
+        }
+
+        if (sizeof($params) > 0) {
+
+            $where = rtrim($where, "and");
+            $where = "where " . $where;
+        }
+
+
+        $query .= $where ." LIMIT :limit OFFSET :offset";
 
         $connection = Database::get()->getConnection();
         $st = $connection->prepare($query);
         $st->setFetchMode(PDO::FETCH_ASSOC);
         $st->bindValue(':limit', $limit, PDO::PARAM_INT);
         $st->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+        foreach ($params as $key => $value) {
+            $st->bindValue(':' . $key, $value);
+        }
+
         $st->execute();
 
         return $st->fetchAll();
@@ -201,12 +242,34 @@ class ProductService extends AbstractService
         return $result[0];
     }
 
-    public function getCount()
+    public function getCount(array $queryParams = array())
     {
+
+        $where = "";
+        $params = array();
+
+        if (isset($queryParams["artNumber"])) {
+            $where .= " `art_number` LIKE :artNumber and";
+            $params["artNumber"] = "%" . $queryParams["artNumber"] . "%";
+        }
+
+        if (isset($queryParams["published"])) {
+            $where .= " `published`= 1 and";
+        }
+
+        if (isset($queryParams["available"])) {
+            $where .= " `available`= 1 and";
+        }
+
+        if (sizeof($params) > 0) {
+            $where = rtrim($where, "and");
+            $where = " where " . $where;
+        }
+
         $connection = Database::get()->getConnection();
-        $st = $connection->prepare('SELECT count(id) from `products`');
+        $st = $connection->prepare('SELECT count(id) from `products`'.$where);
         $st->setFetchMode(PDO::FETCH_NUM);
-        $st->execute();
+        $st->execute($params);
         $result = $st->fetch();
         return $result[0];
     }
@@ -300,8 +363,8 @@ class ProductService extends AbstractService
             $primaryKey = $connection->lastInsertId();
         }
 
-        $this->clearCategories($primaryKey, @$data['category']);
-        $this->addCategories($primaryKey, @$data['category']);
+        //$this->clearCategories($primaryKey, @$data['category']);
+        //$this->addCategories($primaryKey, @$data['category']);
     }
 
     public function getProductCategories($productId)

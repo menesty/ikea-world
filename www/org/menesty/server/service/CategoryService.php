@@ -8,12 +8,19 @@ include_once(Configuration::get()->getClassPath() . "model" . DIRECTORY_SEPARATO
  */
 class CategoryService extends AbstractService
 {
-    public function getCategories($lang, $active = null)
+    public function getCategories($lang, $active = null, $showAll = false)
     {
         $connection = Database::get()->getConnection();
-        $st = $connection->prepare("SELECT `id`, `name_$lang` as `name`, `product_count` as productCount from `categories` " .
-            "left join (select `category_id`, count(`category_id`) as `product_count` from  `product_category` group by `category_id`) product_category on (`id` = `category_id`) " .
-            "where parent_id IS NULL");
+
+        $query = "SELECT `id`, `name_$lang` as `name`, `product_count` as productCount from `categories` " .
+            "left join (select `category_id`, count(`category_id`) as `product_count` from  `product_category` left join `products` on (product_id = id) where published = 1 group by `category_id`) product_category on (`id` = `category_id`) " .
+
+            "where parent_id IS NULL";
+        if (!$showAll) {
+            $query .= " and `product_count` IS NOT NULL";
+        }
+
+        $st = $connection->prepare($query);
 
         $st->setFetchMode(PDO::FETCH_ASSOC);
         $st->execute();
@@ -35,29 +42,61 @@ class CategoryService extends AbstractService
         return $result;
     }
 
-
-    public function getCategoriesTree($lang)
+    public function getByIkeaUrl($lang, $ikeaUrl)
     {
-        $roots = $this->getCategories($lang);
-        $this->populateSubItems($lang, $roots);
+        $connection = Database::get()->getConnection();
+        $query = "SELECT `id`, `name_$lang` as `name` from `categories`" .
+            " where ikea_url =:ikeaUrl limit 1";
+        $params = array("ikeaUrl" => $ikeaUrl);
+
+        $st = $connection->prepare($query);
+        $st->setFetchMode(PDO::FETCH_ASSOC);
+        $st->execute($params);
+        return $this->transformRow($st->fetch());
+    }
+
+
+    public function getCategoriesTree($lang, $id = null)
+    {
+        $roots = $this->getCategories($lang, null, true);
+
+        if (!is_null($id)) {
+            $parents = $this->getParentIds($id);
+
+            $rootElement = end($parents);
+
+            foreach ($roots as $root) {
+                if ($root->getId() == $rootElement) {
+                    $val = array(&$root);
+                    $this->populateSubItems($lang, $val, true);
+                    break;
+                }
+            }
+        }
+
         return $roots;
     }
 
-    public function populateSubItems($lang, &$items)
+    public function populateSubItems($lang, &$items, $showAll = false)
     {
         foreach ($items as $item) {
-            $child = $this->getChilds($lang, $item->getId());
-            $this->populateSubItems($lang, $child);
+            $child = $this->getChilds($lang, $item->getId(), null, $showAll);
+            $this->populateSubItems($lang, $child, $showAll);
             $item->setSubCategories($child);
         }
     }
 
-    public function getChilds($lang, $id, $exclude = null)
+    public function getChilds($lang, $id, $exclude = null, $showAll = false)
     {
         $connection = Database::get()->getConnection();
         $query = "SELECT `id`, `name_$lang` as `name` , `product_count` as productCount from `categories`" .
-            "left join (select `category_id`, count(`category_id`) as `product_count` from  `product_category` group by `category_id`) product_category on (`id` = `category_id`) " .
-            " where parent_id=:id";
+            "left join (select `category_id`, count(`category_id`) as `product_count` from  `product_category` left join `products` on (product_id = id) where published = 1 group by `category_id`) product_category on (`id` = `category_id`) " .
+            " where parent_id=:id ";
+
+        if (!$showAll) {
+            $query .= " and `product_count` IS NOT NULL";
+        }
+
         $params = array("id" => $id);
 
         if (!is_null($exclude)) {
@@ -88,11 +127,14 @@ class CategoryService extends AbstractService
             }
         }
 
-        $queryPart .= " `id`, `name_$activeLang` as `name`, `parent_id` from `categories` ";
+        $queryPart .= " `id`, `name_$activeLang` as `name`, `parent_id` from `categories` where `parent_id` ";
 
         if (!is_null($id)) {
-            $queryPart .= " where `parent_id` = :parentId";
+            $queryPart .= " = :parentId";
             $params["parentId"] = $id;
+        } else {
+            $queryPart .= " IS NULL ";
+            $params["parentId"] = null;
         }
 
         $connection = Database::get()->getConnection();
@@ -183,7 +225,7 @@ class CategoryService extends AbstractService
     public function getById($lang, $id)
     {
         $connection = Database::get()->getConnection();
-        $st = $connection->prepare("SELECT `id`, `name_$lang` as `name`, `parent_id` from `categories` where `id` = :id");
+        $st = $connection->prepare("SELECT `id`, `name_$lang` as `name`, `parent_id`, `ikea_url` from `categories` where `id` = :id");
         $st->setFetchMode(PDO::FETCH_ASSOC);
         $st->execute(array("id" => $id));
 
@@ -230,6 +272,19 @@ class CategoryService extends AbstractService
         $result = $st->fetch();
 
         return $result['parent_id'];
+    }
+
+    public function save($lang, Category $category)
+    {
+        $connection = Database::get()->getConnection();
+        $st = $connection->prepare("INSERT INTO `categories` (`name_$lang`, `parent_id`, `ikea_url`) VALUES (:name,:parentId,:ikeaUrl)");
+        $st->execute(array("name" => $category->getName(), "parentId" => $category->getParentId(), "ikeaUrl" => $category->getIkeaUrl()));
+
+        $id = $connection->lastInsertId();
+        $category->setId($id);
+
+        return $id;
+
     }
 
 

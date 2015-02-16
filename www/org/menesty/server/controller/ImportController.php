@@ -97,6 +97,7 @@ class ImportController
         }
     }
 
+
     private function downloadImages($artNumber, $folderPath, $imgList)
     {
         for ($i = 0; $i < sizeof($imgList); $i++) {
@@ -146,13 +147,13 @@ class ImportController
         $fieldArray = array("art." => "artNumber", "title" => "title", "description" => "shortDescription",
             "дизайнер" => "designer", "Дизайнер" => "designer", "Дызайнер" => "designer", "Дызайнер:" => "designer",
             "Размеры и характеристика товара:" => "size",
-            "Характеристика упаковки:" => "packing","Характарыстыка пакавання:"=> "packing",
-            "Апісанне:"=>"description","Апысанне:"=>"description",
-            "Памер і характарыстыка тавару:"=>"size",
-            "Памеры і характарыстыка тавару:"=>"size","Памеры і характарыстыка"=>"size",
-            "Памеры і характарыстыка пакавання:"=>"size","Харатарстыка пакавання:"=>"packing",
-            "Характарстыка пакавання:"=>"packing","Характарыстыка ўпакоўкі:" => "packing",
-            "Памер і характарстыка тавару:"=>"size","Інструкцыя па догляду:"=>"instruction",
+            "Характеристика упаковки:" => "packing", "Характарыстыка пакавання:" => "packing",
+            "Апісанне:" => "description", "Апысанне:" => "description",
+            "Памер і характарыстыка тавару:" => "size",
+            "Памеры і характарыстыка тавару:" => "size", "Памеры і характарыстыка" => "size",
+            "Памеры і характарыстыка пакавання:" => "size", "Харатарстыка пакавання:" => "packing",
+            "Характарстыка пакавання:" => "packing", "Характарыстыка ўпакоўкі:" => "packing",
+            "Памер і характарстыка тавару:" => "size", "Інструкцыя па догляду:" => "instruction",
             "Описание:" => "description", "Инструкция по уходу:" => "instruction", "Размеры и характеристика товару:" => "size");
 
         $activeField = null;
@@ -245,61 +246,281 @@ class ImportController
         return false;
     }
 
-    public function sortProducts()
-    {
-        $productService = new ProductService();
-        $products = $productService->getNotCategorized();
-        $categoryService = new CategoryService();
-        $categories = $categoryService->getCategoriesTree(Language::getActiveLanguage());
-
-
-        $data = array();
-        foreach ($categories as $category) {
-            foreach ($category->getSubCategories() as $subCategory) {
-                foreach ($subCategory->getSubCategories() as $dno) {
-                    $data[$dno->getId()] = array("name" => $dno->getName(), "parent" => array("id" => $subCategory->getId(), "name" => $subCategory->getName(),
-                        "parent" => array("id" => $category->getId(), "name" => $category->getName())));
-                }
-            }
-        }
-
-        $lines = file(Configuration::get()->getDataPath() . "test_output.txt");
-        $content = "";
-        $i=0;
-        foreach ($lines as $line) {
-            $parts = preg_split("/##/", $line);
-            $found = false;
-            foreach ($data as $key => $value) {
-                $index = 1;
-                if(sizeof($parts) > 4) {
-                    $index = 2;
-                }
-
-                if (trim($value["name"]) == trim($parts[$index]) && trim($value["parent"]["name"]) == trim($parts[$index+1]) && trim($value["parent"]["parent"]["name"]) == trim($parts[$index+2])) {
-                        $i++;
-                        echo "found $i: " . $line . "<br />";
-                    $found = true;
-
-                    $productId = $parts[0];
-                    $categoriesId = array($key, $value["parent"]["id"], $value["parent"]["parent"]["id"]);
-
-                    $productService->assignCategories($productId, $categoriesId);
-                    break;
-                }
-            }
-
-            if(!$found) {
-                $content .= $line;
-            }
-
-        }
-
-        file_put_contents(Configuration::get()->getDataPath() . "not_sorted.txt", $content);
-    }
 
     public function info()
     {
         echo getPreparedArtNumber("S09874436");
     }
+
+
+    private function getPrice($itemData)
+    {
+        $prices = null;
+
+        if ($itemData->prices->hasFamilyPrice) {
+            $prices = $itemData->prices->familyNormal->priceNormal;
+        } else {
+            $prices = $itemData->prices->normal->priceNormal;
+        }
+
+        $result = preg_replace("/[A-z\s]/", "", $prices->priceExclVat);
+        $result = str_replace(",", ".", $result);
+
+        return $result;
+    }
+
+    private function getProductDetails($artNumber)
+    {
+        $url = "http://www.ikea.com/pl/pl/catalog/products/" . $artNumber . "/";
+        $content = $this->downloadContent($url);
+
+        if ($content) {
+            preg_match("/var jProductData = ({.*?});/", $content, $matches);
+            echo $artNumber . "<br />";
+            $data = json_decode($matches[1]);
+            $items = $data->product->items;
+
+
+            return $items;
+        }
+
+        return false;
+
+    }
+
+    public function sortCategory()
+    {
+        $categoryService = new CategoryService();
+        $productService = new ProductService();
+
+        $connection = Database::get()->getConnection();
+        $st = $connection->prepare("select id, art_number from products left join (select * from product_category group by product_id) product_category on (id = product_id) where  product_id is null;");
+        $st->setFetchMode(PDO::FETCH_ASSOC);
+        $st->execute();
+
+        $results = $st->fetchAll();
+
+        $defaultCategory = $categoryService->getById(Language::getActiveLanguage(), 1172);
+        $categories =  $categoryService->getParentIds($defaultCategory->getId());
+
+        foreach ($results as $item) {
+//            $url = "http://www.ikea.com/pl/pl/catalog/products/" . $item["art_number"] . "/";
+//            $content = $this->downloadContent($url);
+
+            $productService->assignCategories($item["id"], $categories);
+  //          if ($content) {
+  //              echo $url . "<br/>";
+//break;
+                /*$doc = new DOMDocument();
+                @$doc->loadHTML($content);
+
+                $xpath = new DOMXPath($doc);
+                $query = '//ul[@id="breadCrumbs"]/li[last()]/a';
+
+                $entries = $xpath->query($query);
+                if ($entries->length > 0) {
+                    $href = $entries->item(0)->getAttribute("href");
+                    $href = str_replace("/pl/pl/catalog/categories/departments/", "", $href);
+
+
+                    $category = $categoryService->getByIkeaUrl(Language::getActiveLanguage(), $href);
+                    if (!is_null($category)) {
+                        $categoriesId = $categoryService->getParentIds($category->getId());
+
+
+                        $productService->assignCategories($item["id"], assignCategories);
+                    } else {
+                        echo $item["art_number"] . "<br />";
+                    }
+                } else {
+                    echo $item["art_number"] . "<br />";
+                }*/
+
+            }
+        //}
+    }
+
+
+    /**
+     * @Path({id})
+     */
+    public function downloadCategoryProduct($id)
+    {
+        $categoryService = new CategoryService();
+        $category = $categoryService->getById(Language::getActiveLanguage(), $id);
+
+        $productService = new ProductService();
+
+        $url = "http://www.ikea.com/pl/pl/catalog/categories/departments/" . $category->getIkeaUrl();
+
+        $content = $this->downloadContent($url);
+
+        $categoriesId = $categoryService->getParentIds($id);
+
+        if ($content) {
+            $doc = new DOMDocument();
+            @$doc->loadHTML($content);
+
+            $xpath = new DOMXPath($doc);
+            $query = '//a[@class="productLink"]';
+
+            $entries = $xpath->query($query);
+
+            foreach ($entries as $entry) {
+                $productUrl = $entry->getAttribute("href");
+                $artNumber = str_replace("/", "", str_replace("/pl/pl/catalog/products/", "", $productUrl));
+                $items = $this->getProductDetails($artNumber);
+
+                if ($items) {
+                    foreach ($items as $item) {
+                        $productItem = $productService->getProductByArtNumber(Language::getActiveLanguage(), trim($item->partNumber));
+                        $price = $this->getPrice($item);
+
+
+                        if (is_null($productItem)) {
+                            $productItemId = $productService->insertGag(trim($item->partNumber));
+                        } else {
+                            $productItemId = $productItem->getId();
+                        }
+
+                        $productService->updatePrice($item->partNumber, $price);
+                        $productService->assignCategories($productItemId, $categoriesId);
+
+                    }
+                } else {
+                    $product = $productService->getProductByArtNumber(Language::getActiveLanguage(), $artNumber);
+
+                    if (is_null($product)) {
+                        $productId = $productService->insertGag($artNumber);
+                    } else {
+                        $productId = $product->getId();
+                    }
+
+                    $productService->assignCategories($productId, $categoriesId);
+                }
+
+
+            }
+
+        }
+
+    }
+
+    public function importCategories()
+    {
+        $url = "http://www.ikea.com/pl/pl/";
+        $content = $this->downloadContent($url);
+        $categoryService = new CategoryService();
+
+        if ($content) {
+            $doc = new DOMDocument();
+            @$doc->loadHTML($content);
+
+            $xpath = new DOMXPath($doc);
+
+
+            $query = '//div[@class="gridRow departmentLinkBlock"]/div[@class="threeColumn"]';
+            $entries = $xpath->query($query);
+
+            $index = 0;
+            foreach ($entries as $entry) {
+                $elCategories = $entry->getElementsByTagName("a");
+
+
+                foreach ($elCategories as $elCategory) {
+                    $categoryUrl = $elCategory->getAttribute("href");
+                    $ikeaKey = str_replace("/pl/pl/catalog/categories/departments/", "", $categoryUrl);
+                    $category = $categoryService->getByIkeaUrl(Language::getActiveLanguage(), $ikeaKey);
+
+                    if (is_null($category)) {
+                        $category = new Category();
+                        $category->setName(trim($elCategory->nodeValue));
+                        $category->setIkeaUrl($ikeaKey);
+
+                        $categoryService->save(Language::getActiveLanguage(), $category);
+                    }
+
+                    $categoryContent = $this->downloadContent("http://www.ikea.com" . $categoryUrl);
+
+                    if ($categoryContent) {
+                        $doc = new DOMDocument();
+                        @$doc->loadHTML($categoryContent);
+
+                        $xpath = new DOMXPath($doc);
+
+                        $query = '//div[@class="departmentLinks"]/ul/li/a';
+                        $elSubCategories = $xpath->query($query);
+
+                        foreach ($elSubCategories as $elSubCategory) {
+                            if (trim($elSubCategory->nodeValue) == "- Serie") {
+                                $this->importSerieCategory($category, $elSubCategory);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private function importSerieCategory($parentCategory, $elSerieCategory)
+    {
+        $categoryService = new CategoryService();
+
+        $categoryUrl = $elSerieCategory->getAttribute("href");
+        $ikeaKey = str_replace("/pl/pl/catalog/categories/departments/", "", $categoryUrl);
+
+        $category = $categoryService->getByIkeaUrl(Language::getActiveLanguage(), $ikeaKey);
+
+        if (is_null($category)) {
+            $category = new Category();
+            $category->setName(trim($elSerieCategory->nodeValue));
+            $category->setIkeaUrl($ikeaKey);
+            $category->setParentId($parentCategory->getId());
+
+            $categoryService->save(Language::getActiveLanguage(), $category);
+        }
+
+        $content = $this->downloadContent("http://www.ikea.com" . $categoryUrl);
+
+        if ($content) {
+            $doc = new DOMDocument();
+            @$doc->loadHTML($content);
+
+            $xpath = new DOMXPath($doc);
+
+            $query = '//div[@class="productsFilterChapters marginBottomAllSeries"]/a';
+            $elSubCategories = $xpath->query($query);
+
+            foreach ($elSubCategories as $elSubCategory) {
+                if (trim($elSubCategory->nodeValue) != "Wszystkie") {
+                    $subCategoryUrl = $elSubCategory->getAttribute("href");
+                    $ikeaKey = str_replace("/pl/pl/catalog/categories/departments/", "", $subCategoryUrl);
+                    $ikeaKey = str_replace("series/", "", $ikeaKey);
+
+                    $subCategory = $categoryService->getByIkeaUrl(Language::getActiveLanguage(), $ikeaKey);
+
+                    if (is_null($subCategory)) {
+                        $subCategory = new Category();
+                        $subCategory->setName(trim($elSubCategory->nodeValue));
+                        $subCategory->setIkeaUrl($ikeaKey);
+                        $subCategory->setParentId($category->getId());
+
+                        $categoryService->save(Language::getActiveLanguage(), $subCategory);
+                    }
+
+                    if ($subCategory->getParentId() == $category->getId()) {
+                        //enter parse
+                        echo $ikeaKey . "==" . $subCategory->getName() . "<br />";
+                    }
+
+
+                }
+            }
+
+        }
+
+
+    }
+
 }
 

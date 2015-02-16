@@ -19,7 +19,7 @@
                                   data-category-id="<?=$subCategory->getId();?>"></span>
                             <a href="/admin/categories/view/<?=$subCategory->getId();?>"
                                class="list-group-item col-xs-11 col-sm-11 col-lg-11"
-                               id="sub_category_item_<?=$subCategory->getId();?>"><?=$subCategory->getName();?></a>
+                               id="sub_category_item_<?=$subCategory->getId();?>"><?=htmlspecialchars($subCategory->getName());?></a>
                         </div>
                         <? if(!is_null($subCategory->getSubCategories())) { ?>
                         <div class="sub-list" id="sub-list_<?=$subCategory->getId();?>">
@@ -30,7 +30,7 @@
                                 <a href="/admin/categories/view/<?=$subSubCategory->getId();?>"
                                    class="list-group-item col-xs-10 col-sm-10 col-lg-10"
                                    id="sub_sub_category_item_<?=$subSubCategory->getId();?>">
-                                    <?=$subSubCategory->getName();?></a>
+                                    <?=htmlspecialchars($subSubCategory->getName());?></a>
                             </div>
                             <? if(!is_null($subSubCategory->getSubCategories())) { ?>
                             <div class="sub-list" id="sub-list_<?=$subSubCategory->getId();?>">
@@ -38,7 +38,7 @@
                                 <div class="row">
                                     <span class="col-xs-3 col-sm-3 col-lg-3"></span>
                                 <span class="list-group-item col-xs-9 col-sm-9 col-lg-9">
-                                    <?=$subSubSubCategory->getName();?></span>
+                                    <?=htmlspecialchars($subSubSubCategory->getName());?></span>
                                 </div>
 
                                 <?};?>
@@ -122,12 +122,15 @@
         });
 
         var el = $('#sub-list_' + active_category);
-        do {
-            if (el.length > 0 && el.hasClass("sub-list")) {
-                el.show();
-            }
 
-        } while (!(el = el.parent()).hasClass("list-categ"));
+        if (el.length > 0) {
+            do {
+                if (el.length > 0 && el.hasClass("sub-list")) {
+                    el.show();
+                }
+
+            } while (!(el = el.parent()).hasClass("list-categ"));
+        }
 
 
         $('.allow-collapse').each(function (i, el) {

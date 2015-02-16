@@ -38,6 +38,10 @@ abstract class AbstractController
         return $_POST;
     }
 
+    protected function getGet(){
+        return $_GET;
+    }
+
     protected function postArray($key)
     {
         return (array)@$_POST[$key];

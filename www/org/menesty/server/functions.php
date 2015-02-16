@@ -8,13 +8,5 @@
 function getPreparedArtNumber($artNumber)
 {
     $length = strlen($artNumber);
-    $index = 8;
-    $part = 3;
-
-    if ($length > 8) {
-        $index = $length;
-        $part = 4;
-    }
-    return substr($artNumber, $length - $index, $part) . "." . substr($artNumber, $length - $index - 3, 3) .
-    "." . substr($artNumber, $length - $index - 6, 2);
+   return substr($artNumber, 0, $length - 5).".".substr($artNumber, $length - 5, 3).".".substr($artNumber, $length - 2);
 }
