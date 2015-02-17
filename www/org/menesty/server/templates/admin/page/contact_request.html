@@ -1,0 +1,81 @@
+<?
+$pb = $this->getParam("paramBuilder");
+function buildPageUrl($pb, $pageNumber){
+return $pb->create()->append("page", $pageNumber)->toParams();
+}
+?>
+<style>
+    .icheckbox_flat-blue {
+        display: block;
+    }
+
+</style>
+<div class="col-xs-12">
+    <div class="widget-box">
+        <div class="widget-title">
+            <h5>Filter</h5>
+        </div>
+        <div class="widget-content">
+            <form action="/admin/products" method="GET">
+
+            </form>
+        </div>
+    </div>
+
+
+    <div class="widget-box">
+        <div class="widget-title">
+								<span class="icon">
+									<i class="fa fa-th"></i>
+								</span>
+            <h5>Client request</h5>
+        </div>
+        <div class="widget-content nopadding dataTables_wrapper">
+
+            <table class="table table-bordered table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Telephone</th>
+                </tr>
+                </thead>
+                <tbody>
+                <? foreach($this->getParam("items") as $item) { ?>
+                <tr class="gradeX">
+                    <td><?=$item->getId();?></td>
+                    <td><?=htmlspecialchars($item->getFirstName());?></td>
+                    <td><?=htmlspecialchars($item->getLastName());?></td>
+                    <td><?=htmlspecialchars($item->getEmail());?></td>
+                    <td><?=htmlspecialchars($item->getTelephone());?></td>
+                    <td style="width: 100px;">
+                        <a class="btn btn-default btn-sm" href="/admin/contactRequest/view/<?=$item->getId();?>"><i
+                                class="fa fa-eye"></i></a>
+                    </td>
+                </tr>
+                <? } ?>
+
+                </tbody>
+            </table>
+
+            <div class="fg-toolbar ui-toolbar ui-widget-header ui-corner-bl ui-corner-br ui-helper-clearfix">
+                <div class="dataTables_paginate fg-buttonset ui-buttonset fg-buttonset-multi ui-buttonset-multi paging_full_numbers">
+                    <a tabindex="0" href="/admin/products/<?=buildPageUrl($pb,1);?>"
+                       class="first ui-corner-tl ui-corner-bl fg-button ui-button ui-state-default <?=1==$this->getParam('activePage')?'ui-state-disabled':''?>">First</a><a
+                        tabindex="0" href="/admin/products/<?=buildPageUrl($pb,($this->getParam('activePage')-1));?>"
+                        class="previous fg-button ui-button ui-state-default <?=1==$this->getParam('activePage')?'ui-state-disabled':''?>">Previous</a><span><? for($i=1; $i<=$this->
+                    getParam("pageCount"); $i++) { ?><a tabindex="0"
+                                                        class="fg-button ui-button ui-state-default <?=$i == $this->getParam('activePage')? 'ui-state-disabled' : '';?>"
+                                                        href="/admin/products/<?=buildPageUrl($pb,$i);?>"><?=$i;?></a><? };?></span><a
+                        tabindex="0"
+                        class="next fg-button ui-button <?=$this->getParam('pageCount')<=$this->getParam('activePage')?'ui-state-disabled':''?>"
+                        href="/admin/products/<?=buildPageUrl($pb,($this->getParam('activePage')+1));?>">Next</a><a tabindex="0"
+                                                                                                                    class="last ui-corner-tr ui-corner-br fg-button ui-button <?=$this->getParam('pageCount')<=$this->getParam('activePage')?'ui-state-disabled':''?>"
+                                                                                                                    href="/admin/products/<?=buildPageUrl($pb,$this->getParam('pageCount'));?>">Last</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

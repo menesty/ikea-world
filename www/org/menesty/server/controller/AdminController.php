@@ -23,12 +23,39 @@ class AdminController extends AbstractAdminController
         return new Template("admin/main.html");
     }
 
+    public function contactRequest(){
+        $breadcrumb = new Breadcrumb();
+        $breadcrumb->append("/admin/contactRequest", "Client Requests");
+
+        $mainTemplate = $this->getBaseTemplate();
+        $mainTemplate->setParam("pageTitle", "Client Requests");
+        $mainTemplate->setParam("breadcrumb", $breadcrumb);
+
+        $contactRequestService = new ContactRequestService();
+
+        $template = new Template("admin/page/contact_request.html");
+
+        $itemsCount = $contactRequestService->getCount($this->getGet());
+        $pageCount = ceil($itemsCount / self::ITEM_PER_PAGE);
+        $activePage = $this->getInt("page", 1, 1, $pageCount);
+
+        $template->setParam("pageCount", $pageCount);
+        $template->setParam("activePage", $activePage);
+
+
+        $template->setParam("items", $contactRequestService->getList(($activePage - 1) * self::ITEM_PER_PAGE, self::ITEM_PER_PAGE));
+        $template->setParam("paramBuilder", new ParamBuilder($this->getGet()));
+
+        $mainTemplate->setParam("main_content", $template);
+
+        return $mainTemplate;
+    }
+
     /**
      * @Path({action}/{key})
      */
     public function pageContent($action = "list", $key = "")
     {
-        $mainTemplate = $this->getBaseTemplate();
 
         $breadcrumb = new Breadcrumb();
         $breadcrumb->append("/admin/pageContent", "Page Contents");
@@ -218,11 +245,6 @@ class AdminController extends AbstractAdminController
         return $mainTemplate;
     }
 
-    public function contactRequest()
-    {
-        $contactRequestService = new ContactRequestService();
-
-    }
 
     /**
      * @Path({artNumber})

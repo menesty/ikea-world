@@ -25,8 +25,23 @@ class ContactRequestService extends AbstractService
         return $contactRequest->getId();
     }
 
-    public function getList() {
+    public function getList($offset, $limit) {
+        $connection = Database::get()->getConnection();
+        $st = $connection->prepare("select * from `contact_request` LIMIT :limit OFFSET :offset");
+        $st->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $st->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $st->execute();
 
+        return $this->transform($st->fetchAll());
+    }
+
+    public function getCount(array $params = array()){
+        $connection = Database::get()->getConnection();
+        $st = $connection->prepare('SELECT count(id) from `contact_request`');
+        $st->setFetchMode(PDO::FETCH_NUM);
+        $st->execute();
+        $result = $st->fetch();
+        return $result[0];
     }
 
     protected function newInstance()
