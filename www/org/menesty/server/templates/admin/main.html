@@ -4,12 +4,14 @@
     <title>Ikea-World Admin</title>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="/css/admin/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/css/admin/font-awesome.css"/>
-    <link rel="stylesheet" href="/css/admin/jquery-ui.css"/>
-    <link rel="stylesheet" href="/css/admin/icheck/flat/blue.css"/>
-    <link rel="stylesheet" href="/css/admin/select2.css"/>
-    <link rel="stylesheet" href="/css/admin/unicorn.css"/>
+    <link rel="stylesheet" href="/css/admin/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/admin/font-awesome.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/admin/jquery-ui.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/admin/icheck/flat/blue.css" type="text/css"/>
+    <link rel="stylesheet" href="/css/admin/select2.css" type="text/css" />
+    <link rel="stylesheet" href="/css/admin/unicorn.css" type="text/css" />
+    <link rel="stylesheet" href="/css/admin/jquery.loadmask.css" type="text/css" />
+
     <script src="/js/admin/jquery.min.js"></script>
     <!--[if lt IE 9]>
     <script type="text/javascript" src="js/admin/respond.min.js"></script>
@@ -17,6 +19,10 @@
 
 </head>
 <body data-color="grey" class="flat">
+<script>
+    var contextUrl = '<?=$this->getParam("contextUrl");?>';
+</script>
+
 <div id="wrapper">
     <div id="header">
         <h1><a href="./index.html">Unicorn Admin</a></h1>
@@ -99,7 +105,7 @@
             <button type="submit" class="tip-right" title="Search"><i class="fa fa-search"></i></button>
         </div>
         <ul>
-            <li><a href="index.html"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
+            <li><a href="/admin"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
 
             <li class="active"><a href="/admin/pageContent"><i class="fa fa-th"></i> <span>Page Content</span></a></li>
             <li><a href="/admin/categories"><i class="fa fa-th"></i> <span>Categories</span></a></li>
@@ -112,7 +118,7 @@
 
     <div id="content">
         <div id="content-header">
-            <h1>Tables</h1>
+            <h1><?=$this->getParam('pageTitle');?></h1>
 
             <div class="btn-group">
                 <a class="btn btn-large" title="Manage Files"><i class="fa fa-file"></i></a>
@@ -123,10 +129,13 @@
             </div>
         </div>
         <div id="breadcrumb">
-            <a href="#" title="Go to Home" class="tip-bottom"><i class="fa fa-home"></i> Home</a>
-            <a href="#" class="current">Tables</a>
+            <a href="/admin" title="Go to Home" class="tip-bottom"><i class="fa fa-home"></i> Dashboard</a>
+            <? $breadcrumb = $this->getParam('breadcrumb'); ?>
+            <? foreach($breadcrumb->getItems() as $key=>$url) { ?>
+                <a href="<?=$url;?>" class="current"><?=$key;?></a>
+            <? } ?>
         </div>
-        <div class="row">
+        <div class="row" id="main-content">
             <?=$this->getParam("main_content");?>
         </div>
     </div>
@@ -145,8 +154,10 @@
     <script src="/js/admin/jquery.nicescroll.min.js"></script>
     <script src="/js/admin/unicorn.js"></script>
     <script src="/js/admin/unicorn.tables.js"></script>
+    <script src="/js/admin/jquery.loadmask.js" type="text/javascript"></script>
 
     <script src="/js/admin/editor.js"></script>
+    <script src="/js/admin/admin.js"></script>
 
 </div>
 </body>

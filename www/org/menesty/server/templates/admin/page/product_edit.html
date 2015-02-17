@@ -14,13 +14,25 @@
                   class="form-horizontal action-form">
                 <div class="form-group">
                     <label class="col-sm-3 col-md-3 col-lg-2 control-label">Art Number</label>
+
                     <div class="col-sm-9 col-md-9 col-lg-10">
-                        <input class="form-control input-sm" type="text" name="art_number" value="<?=$model['art_number'];?>">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <input class="form-control input-sm" type="text" name="art_number" id="artNumber" value="<?=$model['art_number'];?>">
+                            </div>
+                            <? if(@$model['id']) { ?>
+                            <div class="col-md-2">
+                                <button class="btn btn-primary btn-xs" type="button" id="downloadImages">Download Images</button>
+                            </div>
+                            <? } ?>
+                        </div>
                     </div>
+
                 </div>
 
                 <div class="form-group">
                     <label class="col-sm-3 col-md-3 col-lg-2 control-label">Price</label>
+
                     <div class="col-sm-9 col-md-9 col-lg-10">
                         <input class="form-control input-sm" type="text" name="price" value="<?=$model['price'];?>">
                     </div>
@@ -28,17 +40,20 @@
 
                 <div class="form-group">
                     <label class="col-sm-3 col-md-3 col-lg-2 control-label">Designer</label>
+
                     <div class="col-sm-9 col-md-9 col-lg-10">
-                        <input class="form-control input-sm" type="text" name="designer" value="<?=$model['designer'];?>">
+                        <input class="form-control input-sm" type="text" name="designer"
+                               value="<?=$model['designer'];?>">
                     </div>
                 </div>
 
-<?
+                <?
 
- $fields = array("title" => "input", "short_description" => "text", "description" => "textarea", "size" => "textarea", "packing" => "textarea", "instruction"=>"textarea");
-    foreach($fields as $field=>$type) {
-        $index=0;
-?>
+ $fields = array("title" => "input", "short_description" => "text", "description" => "textarea", "size" => "textarea",
+                "packing" => "textarea", "instruction"=>"textarea");
+                foreach($fields as $field=>$type) {
+                $index=0;
+                ?>
                 <div class="tabbable inline" style="margin: 5px 5px 0px 5px;">
                     <ul class="nav nav-tabs tab-bricky" id="<?=$field;?>Tab">
                         <?  foreach(Language::getSupported() as $lang) { ?>
@@ -58,7 +73,8 @@
 
                                         <div class="col-sm-9 col-md-9 col-lg-10">
                                             <? if($type == 'input') {?>
-                                            <input type="text" class="form-control input-sm" name="<?=$field;?>_<?=$lang;?>"
+                                            <input type="text" class="form-control input-sm"
+                                                   name="<?=$field;?>_<?=$lang;?>"
                                                    value="<?=htmlspecialchars(@$model[$field.'_'.$lang]);?>"/>
                                             <? } else { ?>
                                             <textarea rows="7" class="form-control"
@@ -73,18 +89,22 @@
                     </div>
                 </div>
 
-<? } ?>
+                <? } ?>
                 <div class="form-group">
                     <label class="col-sm-3 col-md-3 col-lg-2 control-label">Published</label>
+
                     <div class="col-sm-9 col-md-9 col-lg-10">
-                        <label><input type="checkbox" name="published" <?=$model['published'] == 1?'checked' : ''?> /> </label>
+                        <label><input type="checkbox" name="published" <?=$model['published'] == 1?'checked' : ''?> />
+                        </label>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="col-sm-3 col-md-3 col-lg-2 control-label">Available</label>
+
                     <div class="col-sm-9 col-md-9 col-lg-10">
-                        <label><input type="checkbox" name="available" <?=$model['available'] == 1?'checked' : ''?> /></label>
+                        <label><input type="checkbox" name="available" <?=$model['available'] == 1?'checked' : ''?>
+                            /></label>
                     </div>
                 </div>
 

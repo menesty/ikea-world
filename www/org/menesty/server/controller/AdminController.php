@@ -28,8 +28,17 @@ class AdminController extends AbstractAdminController
      */
     public function pageContent($action = "list", $key = "")
     {
-        $pageContentService = new PageContentService();
         $mainTemplate = $this->getBaseTemplate();
+
+        $breadcrumb = new Breadcrumb();
+        $breadcrumb->append("/admin/pageContent", "Page Contents");
+
+        $mainTemplate = $this->getBaseTemplate();
+        $mainTemplate->setParam("pageTitle", "Page Contents");
+        $mainTemplate->setParam("breadcrumb", $breadcrumb);
+
+        $pageContentService = new PageContentService();
+
 
         if ($action == "edit" || $action == "add") {
             if ($action == "edit") {
@@ -67,11 +76,17 @@ class AdminController extends AbstractAdminController
      */
     public function categories($action = "view", $id = null)
     {
+        $breadcrumb = new Breadcrumb();
+        $breadcrumb->append("/admin/categories", "Categories");
+
+        $mainTemplate = $this->getBaseTemplate();
+        $mainTemplate->setParam("pageTitle", "Categories");
+        $mainTemplate->setParam("breadcrumb", $breadcrumb);
+
         $categoryService = new CategoryService();
 
         if ($action == "view") {
             $template = new Template("admin/page/categories.html");
-
 
             if (!is_null($id) && !$categoryService->isValid($id)) {
                 return new Redirect("/admin/categories");
@@ -86,8 +101,13 @@ class AdminController extends AbstractAdminController
             if (!is_null($id)) {
                 $activeCategory = $categoryService->getById(Language::getActiveLanguage(), $id);
                 $template->setParam("activeCategoryName", $activeCategory->getName());
-            }
 
+                $parents = $categoryService->getParents(Language::getActiveLanguage(), $activeCategory);
+
+                foreach ($parents as $parent) {
+                    $breadcrumb->append("/admin/categories/view/" . $parent->getId(), $parent->getName());
+                }
+            }
 
             $template->setParam("activeCategoryId", $id);
             $template->setParam("categories", $categories);
@@ -99,6 +119,15 @@ class AdminController extends AbstractAdminController
             $template = new Template("admin/page/category_edit.html");
             $model = $categoryService->getAdminCategory($id);
             $template->setParam("model", $model);
+
+            $activeCategory = $categoryService->getById(Language::getActiveLanguage(), $id);
+            $parents = $categoryService->getParents(Language::getActiveLanguage(), $activeCategory);
+            array_pop($parents);
+
+            foreach ($parents as $parent) {
+                $breadcrumb->append("/admin/categories/view/" . $parent->getId(), $parent->getName());
+            }
+
         } elseif ($action == "add" && ((!is_null($id) && $categoryService->isValid($id)) || is_null($id))) {
             if ($categoryService->isFourthLevel($id)) {
                 return new Redirect("/admin/categories/view/" . id);
@@ -107,6 +136,14 @@ class AdminController extends AbstractAdminController
             $template = new Template("admin/page/category_edit.html");
             $model = array("parent_id" => is_null($id) ? "" : (int)$id);
             $template->setParam("model", $model);
+
+            $activeCategory = $categoryService->getById(Language::getActiveLanguage(), $id);
+            $parents = $categoryService->getParents(Language::getActiveLanguage(), $activeCategory);
+
+            foreach ($parents as $parent) {
+                $breadcrumb->append("/admin/categories/view/" . $parent->getId(), $parent->getName());
+            }
+
         } elseif ($action == "update" && $this->isPost()) {
             $postData = $this->getPost();
 
@@ -125,7 +162,6 @@ class AdminController extends AbstractAdminController
             return new Redirect("/admin/categories");
         }
 
-        $mainTemplate = $this->getBaseTemplate();
         $mainTemplate->setParam("main_content", $template);
 
         return $mainTemplate;
@@ -136,6 +172,13 @@ class AdminController extends AbstractAdminController
      */
     public function products($action = "view", $id = null)
     {
+        $breadcrumb = new Breadcrumb();
+        $breadcrumb->append("/admin/products", "Products");
+
+        $mainTemplate = $this->getBaseTemplate();
+        $mainTemplate->setParam("pageTitle", "Products");
+        $mainTemplate->setParam("breadcrumb", $breadcrumb);
+
 
         if ($action == "view") {
             $template = new Template("admin/page/products.html");
@@ -150,14 +193,15 @@ class AdminController extends AbstractAdminController
             $template->setParam("pageCount", $pageCount);
             $template->setParam("activePage", $activePage);
             $template->setParam("paramBuilder", new ParamBuilder($this->getGet()));
-
         } elseif ($action == "edit" || $action == "add") {
             $template = new Template("admin/page/product_edit.html");
 
             if (!is_null($id)) {
                 $template->setParam("model", $this->productService->getAdminProduct($id));
+                $breadcrumb->append("/admin/products/edit/" . $id, "Edit");
             } else {
                 $template->setParam("model", array());
+                $breadcrumb->append("/admin/products/add", "Add");
             }
         } elseif ($action == "update" && $this->isPost()) {
             $this->productService->adminUpdate(Language::getSupported(), $id, $this->getPost());
@@ -168,8 +212,8 @@ class AdminController extends AbstractAdminController
         }
 
 
-        $mainTemplate = $this->getBaseTemplate();
         $mainTemplate->setParam("main_content", $template);
+        $mainTemplate->setParam("contextUrl", $this->getContextPath());
 
         return $mainTemplate;
     }
@@ -178,6 +222,112 @@ class AdminController extends AbstractAdminController
     {
         $contactRequestService = new ContactRequestService();
 
+    }
+
+    /**
+     * @Path({artNumber})
+     */
+    public function downloadPhotos($artNumber)
+    {
+        $product = $this->productService->getProductByArtNumber(Language::getActiveLanguage(), $artNumber);
+
+        if (!is_null($product))
+            $url = "http://www.ikea.com/pl/pl/catalog/products/" . $product->getArtNumber() . "/";
+        $content = $this->downloadContent($url);
+
+        if ($content) {
+            preg_match("/var jProductData = ({.*?});/", $content, $matches);
+            $data = json_decode($matches[1]);
+            $items = $data->product->items;
+            $itemData = null;
+
+            foreach ($items as $item) {
+                if ($item->partNumber == $artNumber) {
+                    $itemData = $item;
+                    break;
+                }
+            }
+
+            $images = $itemData->images;
+
+            $path = $this->createFolderStructure($artNumber);
+
+            $failedDownloadCount = 0;
+            $failedDownloadCount += $this->downloadImages($artNumber, ($path . DIRECTORY_SEPARATOR . "large" . DIRECTORY_SEPARATOR), $images->large);
+            $failedDownloadCount += $this->downloadImages($artNumber, ($path . DIRECTORY_SEPARATOR . "normal" . DIRECTORY_SEPARATOR), $images->normal);
+            $failedDownloadCount += $this->downloadImages($artNumber, ($path . DIRECTORY_SEPARATOR . "zoom" . DIRECTORY_SEPARATOR), $images->zoom);
+            $failedDownloadCount += $this->downloadImages($artNumber, ($path . DIRECTORY_SEPARATOR . "thumb" . DIRECTORY_SEPARATOR), $images->thumb);
+            $failedDownloadCount += $this->downloadImages($artNumber, ($path . DIRECTORY_SEPARATOR . "small" . DIRECTORY_SEPARATOR), $images->small);
+
+            return $failedDownloadCount;
+        }
+    }
+
+    private function downloadContent($url)
+    {
+        $agent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.0.3705; .NET CLR 1.1.4322)';
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, $agent);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_URL, $url);
+
+        $result = curl_exec($ch);
+
+        $http_code = curl_getinfo($ch);
+
+        if ($http_code["http_code"] == "200") {
+            return $result;
+        }
+
+        return false;
+    }
+
+    private function downloadImages($artNumber, $folderPath, $imgList)
+    {
+        $failDownload = 0;
+
+        for ($i = 0; $i < sizeof($imgList); $i++) {
+            $imgUrl = "http://www.ikea.com" . $imgList[$i];
+            $imgName = strtolower($folderPath) . $artNumber . "_" . $i . ".jpg";
+
+            if (!file_exists($imgName)) {
+                $content = $this->downloadContent($imgUrl);
+
+                if (!$content) {
+                    $failDownload++;
+                } else {
+                    file_put_contents($imgName, $content);
+                }
+            }
+
+        }
+
+        return $failDownload;
+    }
+
+    private function createFolderStructure($artNumber)
+    {
+        $artPath = Utils::getProductImagePath($artNumber);
+
+        if (!file_exists($artPath)) {
+            mkdir($artPath, 0777, true);
+        }
+
+        $subFolders = array("large", "normal", "zoom", "thumb", "small");
+
+        foreach ($subFolders as $subFolder) {
+            $path = $artPath . DIRECTORY_SEPARATOR . $subFolder . DIRECTORY_SEPARATOR;
+
+            if (!file_exists($path)) {
+                mkdir($path);
+            }
+        }
+
+        return $artPath;
     }
 
 }
@@ -222,5 +372,20 @@ class ParamBuilder
         }
 
         return rtrim($query, "&");
+    }
+}
+
+class Breadcrumb
+{
+    private $breadcrumbItems = array();
+
+    public function append($url, $item)
+    {
+        $this->breadcrumbItems[$item] = $url;
+    }
+
+    public function getItems()
+    {
+        return $this->breadcrumbItems;
     }
 }

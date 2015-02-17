@@ -239,14 +239,12 @@ class Product
 
     public function getPreparedArtNumber()
     {
-        $length = strlen($this->artNumber);
-        return substr($this->artNumber, $length - 8, 3) . "." . substr($this->artNumber, $length - 5, 3) .
-        "." . substr($this->artNumber, $length - 2, 2);
+        return getPreparedArtNumber($this->artNumber);
     }
 
     public function getSellPrice()
     {
-        return $this->price * self::MARGIN;
+        return round($this->price * self::MARGIN, 2);
     }
 
 } 
