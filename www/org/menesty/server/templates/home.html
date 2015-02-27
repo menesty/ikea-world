@@ -1,3 +1,26 @@
-<div class="col-lg-12 col-sm-12 hero-feature">
+<div class="col-lg-3 col-md-3 col-sm-12">
+    <div class="col-lg-12 col-md-12 col-sm-6">
+        <div class="no-padding">
+            <span class="title"><?=Language::getNewsLabel('news');?></span>
+        </div>
+<?
+    $contextUrl = $this->getParam("contextUrl");
+    $items = $this->getParam("items");
+    foreach($items as $item) {
+?>
+        <div class="hero-feature">
+            <div><a href="<?=$contextUrl;?>"><?=$item->getTitle();?></a></div>
+            <div><?=substr(strip_tags($item->getDescription()), 0, 100).' ...';?></div>
+            <div><a href="#"><?=Language::getNewsLabel('details');?></a></div>
+        </div>
+<? }; ?>
+
+        <div class="hero-feature"><a href="#"><?=Language::getNewsLabel('all');?></a> </div>
+    </div>
+</div>
+
+<div class="clearfix visible-sm"></div>
+
+<div class="col-lg-9 col-md-9 col-sm-12 hero-feature">
     <?=$this->getParam('content')->getContent();?>
 </div>

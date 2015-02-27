@@ -20,6 +20,17 @@
                 <li><a href="<?=$contextUrl;?>checkout/" class="<?=Menu::activeMenuStyle('checkout');?>"><?=Language::getMenuLabel('checkout');?></a></li>
                 <li><a href="<?=$contextUrl;?>contact/" class="<?=Menu::activeMenuStyle('contact');?>"><?=Language::getMenuLabel('contact_us');?></a></li>
             </ul>
+            <style>
+                .nav.navbar-nav.navbar-right.flags a {
+                    padding-left: 5px;
+                    padding-right: 5px;
+                }
+            </style>
+            <ul class="nav navbar-nav navbar-right flags">
+                <li><a href="/ru"><img src="/img/russia-flag-16x16.png" /></a></li>
+                <li><a href="/by"><img src="/img/belarus-flag-16x16.png" /></a></li>
+                <li><a href="/ua"><img src="/img/ukraine-flag-16x16.png" /></a></li>
+            </ul>
         </div>
     </div>
 </nav>

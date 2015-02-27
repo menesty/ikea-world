@@ -8,7 +8,7 @@
             <div class="widget-content nopadding">
                 <div class="list-group list-categ">
                     <? foreach($this->params["categories"] as $category) { ?>
-                    <a href="/admin/categories/view/<?=$category->getId();?>" class="list-group-item">
+                    <a href="/admin/categories/<?=$category->getId();?>" class="list-group-item">
                         <?=$category->getName();?></a>
 
                     <? if(!is_null($category->getSubCategories())) { ?>
@@ -17,7 +17,7 @@
                         <div class="row">
                             <span class="col-xs-1 col-sm-1 col-lg-1 text-right <?=$subCategory->hasCategories()?'allow-collapse':'';?>"
                                   data-category-id="<?=$subCategory->getId();?>"></span>
-                            <a href="/admin/categories/view/<?=$subCategory->getId();?>"
+                            <a href="/admin/categories/<?=$subCategory->getId();?>"
                                class="list-group-item col-xs-11 col-sm-11 col-lg-11"
                                id="sub_category_item_<?=$subCategory->getId();?>"><?=htmlspecialchars($subCategory->getName());?></a>
                         </div>
@@ -27,7 +27,7 @@
                             <div class="row">
                                 <span class="col-xs-2 col-sm-2 col-lg-2 text-right <?=$subSubCategory->hasCategories()?'allow-collapse':'';?>"
                                       data-category-id="<?=$subSubCategory->getId();?>"></span>
-                                <a href="/admin/categories/view/<?=$subSubCategory->getId();?>"
+                                <a href="/admin/categories/<?=$subSubCategory->getId();?>"
                                    class="list-group-item col-xs-10 col-sm-10 col-lg-10"
                                    id="sub_sub_category_item_<?=$subSubCategory->getId();?>">
                                     <?=htmlspecialchars($subSubCategory->getName());?></a>

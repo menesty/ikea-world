@@ -47,10 +47,38 @@ abstract class AbstractService
 
     protected abstract function newInstance();
 
-    protected function getBoolean($value) {
-        if(!is_null($value) && ( (is_int($value) && $value >0)) ||  trim($value) == "on" || trim($value) == "true") {
+    protected function getBoolean($value)
+    {
+        if (!is_null($value) && ((is_int($value) && $value > 0)) || trim($value) == "on" || trim($value) == "true") {
             return true;
         }
         return false;
+    }
+
+    public function getSqlDateTime($value, $inputFormat)
+    {
+        $value = trim($value);
+
+        if ($value != "") {
+            $date = DateTime::createFromFormat($inputFormat, $value);
+
+            return $date? $date->format('Y-m-d H:i:s') : null;
+        }
+
+        return null;
+    }
+
+    public function getFormatSqlDateTime($value, $format){
+        if(!is_null($value)) {
+            $value = trim($value);
+
+            if ($value != "") {
+                $date = DateTime::createFromFormat('Y-m-d H:i:s', $value);
+
+                return $date ? $date->format($format) : null;
+            }
+        }
+
+        return null;
     }
 } 

@@ -4,7 +4,13 @@ $(function () {
 
         var artNumber = $('#artNumber').val();
         $.get(contextUrl + "admin/downloadPhotos/" + artNumber, function (data) {
-            $("#main-content").unmask();ß
+            $("#main-content").unmask();
         });
+    });
+
+    $('.datepicker').datepicker();
+
+    $('.datetimepicker').datetimepicker({
+        format: 'DD/MM/YYYY HH:mm'
     });
 });

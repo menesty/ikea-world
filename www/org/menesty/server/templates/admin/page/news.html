@@ -1,0 +1,107 @@
+<?
+$pb = $this->getParam("paramBuilder");
+function buildPageUrl($pb, $pageNumber){
+return $pb->create()->append("page", $pageNumber)->toParams();
+}
+?>
+
+<div class="col-xs-12">
+    <div class="widget-box">
+        <div class="widget-title">
+								<span class="icon">
+									<i class="fa fa-th"></i>
+								</span>
+            <h5><?=$this->getParam('pageTitle');?></h5>
+            <div class="buttons">
+                <a title="Add" class="btn" href="/admin/news/add"><i class="fa fa-plus"></i> <span class="text">Add</span></a>
+            </div>
+        </div>
+        <div class="widget-content nopadding dataTables_wrapper">
+
+            <table class="table table-bordered table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Published Date</th>
+                    <th>Published</th>
+                </tr>
+                </thead>
+                <tbody>
+                <? foreach($this->getParam("items") as $item) { ?>
+                <tr class="gradeX">
+                    <td><?=$item["title"];?></td>
+                    <td>
+                        <? foreach(Language::getSupported() as $lang) { ?>
+                        <div class="col-sm-7 col-lg-8"><?=$lang;?></div>
+                        <div class="col-sm-4 col-lg-2">
+                            <? if($item['title_'.$lang]) { ?>
+                            <i class="fa fa-check available"></i>
+                            <? } else { ?>
+                            <i class="fa fa-minus not-available"></i>
+                            <?}?>
+                        </div>
+                        <?}?>
+                    </td>
+                    <td>
+                        <? foreach(Language::getSupported() as $lang) { ?>
+                        <div class="col-sm-7 col-lg-8"><?=$lang;?></div>
+                        <div class="col-sm-4 col-lg-2">
+                            <? if($item['description_'.$lang]) { ?>
+                            <i class="fa fa-check available"></i>
+                            <? } else { ?>
+                            <i class="fa fa-minus not-available"></i>
+                            <?}?>
+                        </div>
+                        <?}?>
+                    </td>
+                    <td>
+                        <div class="col-sm-4 col-lg-2">
+                            <? if($item['published_date']) { ?>
+                            <i class="fa fa-check available"></i>
+                            <? } else { ?>
+                            <i class="fa fa-minus not-available"></i>
+                            <?}?>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="col-sm-4 col-lg-2">
+                            <? if($item['published']) { ?>
+                            <i class="fa fa-check available"></i>
+                            <? } else { ?>
+                            <i class="fa fa-minus not-available"></i>
+                            <?}?>
+                        </div>
+                    </td>
+                    <td style="width: 100px;">
+                        <a class="btn btn-default btn-sm" href="/admin/news/edit/<?=$item['id'];?>"><i
+                                class="fa fa-edit"></i></a>
+                        <a class="btn btn-default btn-sm" href="/admin/news/delete/<?=$item['id'];?>"><i
+                                class="fa fa-trash-o"></i></a>
+                    </td>
+                </tr>
+                <? } ?>
+
+                </tbody>
+            </table>
+
+            <div class="fg-toolbar ui-toolbar ui-widget-header ui-corner-bl ui-corner-br ui-helper-clearfix">
+                <div class="dataTables_paginate fg-buttonset ui-buttonset fg-buttonset-multi ui-buttonset-multi paging_full_numbers">
+                    <a tabindex="0" href="/admin/news/<?=buildPageUrl($pb,1);?>"
+                       class="first ui-corner-tl ui-corner-bl fg-button ui-button ui-state-default <?=1==$this->getParam('activePage')?'ui-state-disabled':''?>">First</a><a
+                        tabindex="0" href="/admin/news/<?=buildPageUrl($pb,($this->getParam('activePage')-1));?>"
+                        class="previous fg-button ui-button ui-state-default <?=1==$this->getParam('activePage')?'ui-state-disabled':''?>">Previous</a><span><? for($i=1; $i<=$this->
+                    getParam("pageCount"); $i++) { ?><a tabindex="0"
+                                                        class="fg-button ui-button ui-state-default <?=$i == $this->getParam('activePage')? 'ui-state-disabled' : '';?>"
+                                                        href="/admin/news/<?=buildPageUrl($pb,$i);?>"><?=$i;?></a><? };?></span><a
+                        tabindex="0"
+                        class="next fg-button ui-button <?=$this->getParam('pageCount')<=$this->getParam('activePage')?'ui-state-disabled':''?>"
+                        href="/admin/news/<?=buildPageUrl($pb,($this->getParam('activePage')+1));?>">Next</a><a tabindex="0"
+                                                                                                                    class="last ui-corner-tr ui-corner-br fg-button ui-button <?=$this->getParam('pageCount')<=$this->getParam('activePage')?'ui-state-disabled':''?>"
+                                                                                                                    href="/admin/news/<?=buildPageUrl($pb,$this->getParam('pageCount'));?>">Last</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

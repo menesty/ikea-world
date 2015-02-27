@@ -18,7 +18,9 @@ $(function () {
     $(window).resize(function () {
         var width = $(this).width();
         if (width > 750) {
-            $('.link-p img').centerImage();
+            if($('.link-p img').centerImage) {
+                $('.link-p img').centerImage();
+            }
             $('.link-p img').removeClass('def-img');
         } else {
             $('.link-p img').addClass('def-img');

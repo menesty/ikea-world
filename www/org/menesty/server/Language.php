@@ -24,6 +24,7 @@ class Language
     {
         if (sizeof($pathParams) > 0) {
             $lang = trim(strtolower($pathParams[0]));
+
             if (in_array($lang, Language::$supported)) {
                 Language::$activeLanguage = $lang;
                 array_shift($pathParams);
@@ -94,5 +95,10 @@ class Language
     public static function getProductLabel($key)
     {
         return self::getMessage("product", $key);
+    }
+
+    public static function getNewsLabel($key)
+    {
+        return self::getMessage("news", $key);
     }
 }

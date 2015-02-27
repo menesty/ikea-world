@@ -18,7 +18,7 @@ class CartController extends AbstractController
 
     public function addItem()
     {
-        $count = $this->postInt("count", 0, 0);
+        $count = $this->postInt("count", 1, 0);
         $id = $this->postInt("id");
 
         $product = $this->productService->getById(Language::getActiveLanguage(), $id);
@@ -26,7 +26,7 @@ class CartController extends AbstractController
         $result = new stdClass();
         $result->error = false;
 
-        if (!is_null($product) && $product->getPublished() && $product->getAvailable()) {
+        if (!is_null($product) && $product->getAvailable()) {
             ShoppingCart::get()->addItem($product, $count);
             $template = new Template("content/menu_shopping_cart.html");
             $template->setParam("contextUrl", $this->getContextPath());

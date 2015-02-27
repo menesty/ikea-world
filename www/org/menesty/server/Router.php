@@ -13,11 +13,11 @@ class Router
         $route = (empty($_GET['route'])) ? 'index' : $_GET['route'];
 
         try {
+
             $pathParts = $this->preProcessHandler($route);
 
             $controllerData = $this->getController($pathParts);
 
-            //var_dump($controllerData);
             $controllerInstance = $controllerData[0];
             $controllerArg = $controllerData[1];
             $action = "defaultAction";
@@ -38,6 +38,7 @@ class Router
             Menu::setActiveController($controllerInstance);
 
             $result = $method->invokeArgs($controllerInstance, $this->getMethodArg($method, $params));
+
             $this->showResult($result);
 
         } catch (Exception $e) {

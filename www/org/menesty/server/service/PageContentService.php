@@ -9,7 +9,8 @@ include_once(Configuration::get()->getClassPath() . "model" . DIRECTORY_SEPARATO
 class PageContentService extends AbstractService
 {
 
-    public function getPageContent($lang, $contentKey){
+    public function getPageContent($lang, $contentKey)
+    {
         $connection = Database::get()->getConnection();
         $st = $connection->prepare("SELECT `content_key`, `title_$lang` as `title`, `content_$lang` as `content` from `page_content` where `content_key` = :contentKey");
 
@@ -21,15 +22,7 @@ class PageContentService extends AbstractService
     public function getPageContentList($languages = array())
     {
         $fields = array('title', 'content');
-        $queryPart = "SELECT ";
-
-        foreach ($fields as $field) {
-            foreach ($languages as $lang) {
-                $queryPart .= "if(" . $field . "_" . $lang . " IS NULL or trim(" . $field . "_" . $lang . ")='' ,false, true ) as " . $field . "_" . $lang . ", ";
-            }
-        }
-
-        $queryPart .= " content_key from `page_content`";
+        $queryPart = "SELECT " . $this->createLangAdminQueryCheck($languages, $fields) . ", `content_key` from `page_content`";
 
         $connection = Database::get()->getConnection();
         $st = $connection->prepare($queryPart);

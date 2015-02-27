@@ -48,10 +48,10 @@
                 </div>
 
                 <?
-
- $fields = array("title" => "input", "short_description" => "text", "description" => "textarea", "size" => "textarea",
-                "packing" => "textarea", "instruction"=>"textarea");
+                $fields = array("title" => array("input"), "short_description" => array("input"), "description" => array("textarea",7), "size" => array("textarea",10),
+                "packing" => array("textarea", 14), "instruction"=>array("textarea", 5));
                 foreach($fields as $field=>$type) {
+
                 $index=0;
                 ?>
                 <div class="tabbable inline" style="margin: 5px 5px 0px 5px;">
@@ -72,12 +72,12 @@
                                         <label class="col-sm-3 col-md-3 col-lg-2 control-label"><?=str_replace("_"," ",ucfirst($field));?></label>
 
                                         <div class="col-sm-9 col-md-9 col-lg-10">
-                                            <? if($type == 'input') {?>
+                                            <? if($type[0] == 'input') {?>
                                             <input type="text" class="form-control input-sm"
                                                    name="<?=$field;?>_<?=$lang;?>"
                                                    value="<?=htmlspecialchars(@$model[$field.'_'.$lang]);?>"/>
                                             <? } else { ?>
-                                            <textarea rows="7" class="form-control"
+                                            <textarea rows="<?=$type[1];?>" class="form-control"
                                                       name="<?=$field;?>_<?=$lang;?>"><?=htmlspecialchars(@$model[$field.'_'.$lang]);?></textarea>
                                             <? } ?>
                                         </div>
