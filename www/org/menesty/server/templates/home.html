@@ -9,13 +9,13 @@
     foreach($items as $item) {
 ?>
         <div class="hero-feature">
-            <div><a href="<?=$contextUrl;?>"><?=$item->getTitle();?></a></div>
+            <div><a href="<?=$contextUrl;?>news/details/<?=$item->getId();?>"><?=$item->getTitle();?></a></div>
             <div><?=substr(strip_tags($item->getDescription()), 0, 100).' ...';?></div>
-            <div><a href="#"><?=Language::getNewsLabel('details');?></a></div>
+            <div><a href="<?=$contextUrl;?>news/details/<?=$item->getId();?>"><?=Language::getNewsLabel('details');?></a></div>
         </div>
 <? }; ?>
 
-        <div class="hero-feature"><a href="#"><?=Language::getNewsLabel('all');?></a> </div>
+        <div class="hero-feature"><a href="<?=$contextUrl;?>news"><?=Language::getNewsLabel('all');?></a> </div>
     </div>
 </div>
 

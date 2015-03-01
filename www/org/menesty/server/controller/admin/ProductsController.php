@@ -6,6 +6,7 @@
  */
 
 include_once(Configuration::get()->getClassPath() . "AbstractAdminController.php");
+include_once(Configuration::get()->getClassPath() . "model" . DIRECTORY_SEPARATOR . "Paging.php");
 include_once(Configuration::get()->getClassPath() . "service" . DIRECTORY_SEPARATOR . "PageContentService.php");
 
 
@@ -31,6 +32,16 @@ class ProductsController extends AbstractAdminController
         $template->setParam("activePage", $activePage);
         $template->setParam("paramBuilder", new ParamBuilder($this->getGet()));
 
+
+        $pagingTemplate = new Template("admin/paging.html");
+
+        $pagingTemplate->setParam("paging", new Paging($pageCount, $activePage));
+        $pagingTemplate->setParam("pagingUrl", $this->getContextPath() . "admin/products");
+
+        $template->setParam("paging_content", $pagingTemplate);
+
+
+        $mainTemplate->setParam("main_content", $pagingTemplate);
 
         $mainTemplate->setParam("main_content", $template);
 
@@ -61,12 +72,26 @@ class ProductsController extends AbstractAdminController
      * @Method(POST)
      * @Path({id})
      */
-    public function update($id){
+    public function update($id)
+    {
         $this->productService->adminUpdate(Language::getSupported(), $id, $this->getPost());
 
         return new Redirect("/admin/products");
     }
 
+    public function downloadArtImages()
+    {
+        for ($i = 0; $i < 100; $i++) {
+            $artNumbers = $this->productService->productForDownload();
+
+            foreach ($artNumbers as $artNumber) {
+                $this->downloadPhotos($artNumber["art_number"]);
+                $this->productService->updateImageDownload($artNumber["art_number"]);
+            }
+
+            sleep(10);
+        }
+    }
 
     /**
      * @Path({artNumber})

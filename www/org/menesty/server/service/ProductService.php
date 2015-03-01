@@ -196,7 +196,7 @@ class ProductService extends AbstractService
         }
 
 
-        $query .= $where ." LIMIT :limit OFFSET :offset";
+        $query .= $where . " LIMIT :limit OFFSET :offset";
 
         $connection = Database::get()->getConnection();
         $st = $connection->prepare($query);
@@ -267,7 +267,7 @@ class ProductService extends AbstractService
         }
 
         $connection = Database::get()->getConnection();
-        $st = $connection->prepare('SELECT count(id) from `products`'.$where);
+        $st = $connection->prepare('SELECT count(id) from `products`' . $where);
         $st->setFetchMode(PDO::FETCH_NUM);
         $st->execute($params);
         $result = $st->fetch();
@@ -431,6 +431,23 @@ class ProductService extends AbstractService
         $st->execute();
 
         return $st->fetchAll();
+    }
+
+    public function productForDownload()
+    {
+        $connection = Database::get()->getConnection();
+        $st = $connection->prepare("select `art_number` from `products` where `image_download` = 0 limit 20");
+        $st->setFetchMode(PDO::FETCH_ASSOC);
+        $st->execute();
+
+        return $st->fetchAll();
+    }
+
+    public function updateImageDownload($artNumber)
+    {
+        $connection = Database::get()->getConnection();
+        $st = $connection->prepare("update `products` set `image_download` = 1 where `art_number` = :artNumber");
+        $st->execute(array("artNumber" => $artNumber));
     }
 }
 

@@ -1,0 +1,25 @@
+<?
+    $pb = $this->getParam("paramBuilder");
+    $paging = $this->getParam("paging");
+
+    function buildPageUrl($pb, $pageNumber){
+        return $pb->create()->append("page", $pageNumber)->toParams();
+    }
+
+    $pagingUrl = $this->getParam("pagingUrl");
+?>
+<div class="fg-toolbar ui-toolbar ui-widget-header ui-corner-bl ui-corner-br ui-helper-clearfix">
+    <div class="dataTables_paginate fg-buttonset ui-buttonset fg-buttonset-multi ui-buttonset-multi paging_full_numbers">
+        <a tabindex="0" href="<?=$pagingUrl.buildPageUrl($pb,1);?>"
+           class="first ui-corner-tl ui-corner-bl fg-button ui-button ui-state-default <?=1==$this->getParam('activePage')?'ui-state-disabled':''?>">First</a><a
+            tabindex="0" href="<?=$pagingUrl.buildPageUrl($pb,($this->getParam('activePage')-1));?>"
+            class="previous fg-button ui-button ui-state-default <?=1==$this->getParam('activePage')?'ui-state-disabled':''?>">Previous</a><span><? foreach($paging as $page) { ?><a tabindex="0"
+                                            class="fg-button ui-button ui-state-default <?=$page == $this->getParam('activePage')? 'ui-state-disabled' : '';?>"
+                                            href="<?=$pagingUrl.buildPageUrl($pb,$page);?>"><?=$page;?></a><? };?></span><a
+            tabindex="0"
+            class="next fg-button ui-button <?=$this->getParam('pageCount')<=$this->getParam('activePage')?'ui-state-disabled':''?>"
+            href="<?=$pagingUrl.buildPageUrl($pb,($this->getParam('activePage')+1));?>">Next</a><a tabindex="0"
+                                                                                                        class="last ui-corner-tr ui-corner-br fg-button ui-button <?=$this->getParam('pageCount')<=$this->getParam('activePage')?'ui-state-disabled':''?>"
+                                                                                                        href="<?=$pagingUrl.buildPageUrl($pb,$this->getParam('pageCount'));?>">Last</a>
+    </div>
+</div>

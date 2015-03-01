@@ -7,11 +7,29 @@
  */
 class NewsItem
 {
+    private $id;
     private $title;
     private $shortDescription;
     private $description;
     private $published;
     private $publishedDate;
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
 
     /**
      * @return mixed

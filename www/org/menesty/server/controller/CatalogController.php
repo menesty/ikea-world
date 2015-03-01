@@ -69,7 +69,7 @@ class CatalogController extends AbstractController
 
         $pagingTemplate = new Template("content/paging.html");
 
-        $pagingUrl = !is_null($activeCategory) ? ($context . $activeCategory->getName() . "/") : $context;
+        $pagingUrl = !is_null($activeCategory) ? ($context . $activeCategory->getId() . "/") : $context;
 
 
         $pagingTemplate->setParam("paging", new Paging($pageCount, $activePage));

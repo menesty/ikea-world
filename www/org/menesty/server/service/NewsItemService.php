@@ -12,7 +12,7 @@ class NewsItemService extends AbstractService
 
     public function latest($lang, $limit = 3)
     {
-        $query = "select `title_$lang` as title, `description_$lang` as description, `published_date` from `news`" .
+        $query = "select `id`, `title_$lang` as title, `description_$lang` as description, `published_date` from `news`" .
             " where `published` = 1  order by `published_date` desc LIMIT :limit";
 
         $connection = Database::get()->getConnection();
@@ -26,9 +26,24 @@ class NewsItemService extends AbstractService
         return $this->transform($st->fetchAll());
     }
 
-    public function listRange($lang, $limit, $offset)
+    public function getById($lang, $id)
     {
-        $query = "select `title_$lang` as title, `short_description_$lang`, `published_date` from `news`" .
+        $query = "select `title_$lang` as title, `description_$lang` as description, `published_date` from `news` " .
+            "where `id` = :id";
+
+        $connection = Database::get()->getConnection();
+        $st = $connection->prepare($query);
+        $st->setFetchMode(PDO::FETCH_ASSOC);
+
+
+        $st->execute(array("id" => $id));
+
+        return $this->transformRow($st->fetch());
+    }
+
+    public function getPublishedRange($lang, $limit, $offset)
+    {
+        $query = "select `id`, `title_$lang` as title, `description_$lang` as description, `published_date` from `news`" .
             " where `published` = 1  order by `published_date` desc LIMIT :limit OFFSET :offset";
 
         $connection = Database::get()->getConnection();
@@ -41,6 +56,16 @@ class NewsItemService extends AbstractService
         $st->execute();
 
         return $this->transform($st->fetchAll());
+    }
+
+    public function getPublishedCount()
+    {
+        $connection = Database::get()->getConnection();
+        $st = $connection->prepare('SELECT count(id) from `news` where `published` = 1');
+        $st->setFetchMode(PDO::FETCH_NUM);
+        $st->execute();
+        $result = $st->fetch();
+        return $result[0];
     }
 
     public function getCount()
