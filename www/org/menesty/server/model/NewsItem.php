@@ -66,8 +66,18 @@ class NewsItem
     /**
      * @return mixed
      */
-    public function getPublishedDate()
+    public function getPublishedDate($format = false)
     {
+        if ($format) {
+            $value = trim($this->publishedDate);
+
+            if ($value != "") {
+                $date = DateTime::createFromFormat('Y-m-d H:i:s', $value);
+
+                return $date? $date->format('d/m/Y H:i') : null;
+            }
+        }
+
         return $this->publishedDate;
     }
 
@@ -79,21 +89,6 @@ class NewsItem
         $this->publishedDate = $publishedDate;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getShortDescription()
-    {
-        return $this->shortDescription;
-    }
-
-    /**
-     * @param mixed $shortDescription
-     */
-    public function setShortDescription($shortDescription)
-    {
-        $this->shortDescription = $shortDescription;
-    }
 
     /**
      * @return mixed
@@ -110,6 +105,5 @@ class NewsItem
     {
         $this->title = $title;
     }
-
 
 } 

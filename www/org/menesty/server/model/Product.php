@@ -247,4 +247,13 @@ class Product
         return round($this->price * self::MARGIN, 2);
     }
 
+    public function hasTranslation()
+    {
+        if (is_null($this->description) || is_null($this->instruction) || is_null($this->packing)) {
+            return false;
+        }
+
+        return true;
+    }
+
 } 

@@ -10,7 +10,7 @@
 ?>
         <div class="hero-feature">
             <div><a href="<?=$contextUrl;?>news/details/<?=$item->getId();?>"><?=$item->getTitle();?></a></div>
-            <div><?=substr(strip_tags($item->getDescription()), 0, 100).' ...';?></div>
+            <div><?=mb_substr(strip_tags($item->getDescription()), 0, 100).' ...';?></div>
             <div><a href="<?=$contextUrl;?>news/details/<?=$item->getId();?>"><?=Language::getNewsLabel('details');?></a></div>
         </div>
 <? }; ?>

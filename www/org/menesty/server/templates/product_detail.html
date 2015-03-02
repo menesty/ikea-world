@@ -17,7 +17,7 @@
             <? }; ?>
         </div>
 
-        <?=$product->getDescription();?>
+        <?=$product->hasTranslation() ? $product->getDescription() : sprintf(Language::getProductLabel("no_translation"),$product->getArtNumber(),  $product->getPreparedArtNumber());?>
         <hr/>
         <h3><?=ShoppingCart::get()->getCurrency()->getName();?> <?=$product->getSellPrice();?></h3>
 
@@ -25,7 +25,7 @@
             <input type="text" class="form-control input-qty text-center" value="1" id="product-count">
             <button class="btn btn-primary pull-left add-to-cart" data-id="<?=$product->getId();?>" data-count="#product-count" ><?=Language::getMainLabel('add_to_cart');?></button>
         </div>
-
+<? if($product->hasTranslation()) { ?>
         <div class="row product-details">
             <hr/>
             <div class="col-lg-6 col-sm-6">
@@ -45,6 +45,7 @@
                 <?=nl2br($product->getSize());?>
             </div>
         </div>
+<? } ?>
 
         <style>
             .row.product-details h4 {
